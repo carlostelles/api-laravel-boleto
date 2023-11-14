@@ -1,14 +1,22 @@
 {
-    "name": "laravel/laravel",
+    "name": "trezzuri/api-laravel-boleto",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "API simples para a package eduardokum/laravel-boleto",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "repositories": [
         {
-          "type": "git",
-          "url": "https://github.com/trezzuri/laravel-boleto.git"
-        }
+            "type":"package",
+            "package": {
+              "name": "eduardokum/laravel-boleto",
+              "version":"master",
+              "source": {
+                  "url": "https://github.com/trezzuri/laravel-boleto.git",
+                  "type": "git",
+                  "reference":"master"
+                }
+            }
+        }   
     ],
     "require": {
         "eduardokum/laravel-boleto": "dev-master",
@@ -21,7 +29,6 @@
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
-        "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.1",

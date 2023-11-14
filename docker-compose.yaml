@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  api-laravel-boleto:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: trezzuri/api-laravel-boleto
+    container_name: api-laravel-boleto
+    user: www
+    ports:
+      - mode: ingress
+        target: 9000
+        published: "9000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/html
+      - type: volume
+        source: storage
+        target: /var/www/html/storage
+    networks:
+      - api-laravel-boleto
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - mode: ingress
+        target: 80
+        published: "${APP_PORT:-8900}"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/html
+      - type: bind
+        source: ./docker/nginx
+        target: /etc/nginx/conf.d
+      - type: volume
+        source: log
+        target: /var/log/nginx
+    networks:
+      - api-laravel-boleto
+    depends_on:
+      api-laravel-boleto:
+        condition: service_started
+
+networks:
+    api-laravel-boleto:
+        driver: bridge
+
+volumes:
+  storage:
+  log:
