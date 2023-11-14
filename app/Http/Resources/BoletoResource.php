@@ -4,9 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Eduardokum\LaravelBoleto\Util;
-use Eduardokum\LaravelBoleto\Pessoa;
-use Eduardokum\LaravelBoleto\Boleto\Render\Pdf;
+use \Eduardokum\LaravelBoleto\Util;
+use \Eduardokum\LaravelBoleto\Pessoa;
+use \Eduardokum\LaravelBoleto\Boleto\Render\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
