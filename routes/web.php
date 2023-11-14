@@ -21,6 +21,6 @@ Route::get('/file/{file}', function ($file) {
     if (Storage::exists($file)) {
         return Storage::download($file);
     } else {
-        abort(400, 'Arquivo ' . $file . ' nao encontrado');
+        abort(400, 'File ' . $file . ' not found');
     }
 });

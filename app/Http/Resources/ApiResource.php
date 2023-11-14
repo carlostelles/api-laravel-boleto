@@ -30,8 +30,6 @@ class ApiResource extends JsonResource
             parent::__construct([
                 'status' => 1,
                 'message' => 'Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $banco,
-                'remessa' => '',
-                'data' => [],
             ]);
             return;
         }
