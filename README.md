@@ -35,7 +35,7 @@ A estrutura do JSON esperado pela API é a seguinte:
 ```
 {
    "data": {
-      "banco": 756,
+      "banco": "756",
       "layout_cnab": 400,
       "logo": "",
       "beneficiario": {
