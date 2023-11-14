@@ -37,7 +37,7 @@ A estrutura do JSON esperado pela API é a seguinte:
    "data": {
       "banco": "756",
       "layout_cnab": "400",
-      "logo": "http://url.de-um-logo.com/imagem.p",
+      "logo": "",
       "beneficiario": {
          "nome": "ACME",
          "endereco": "Rua um, 123",
