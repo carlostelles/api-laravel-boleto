@@ -21,7 +21,7 @@ docker compose up -d
 
 ## Como Usar
 
-Você pode usar uma plataforma de execução de API, como por exemplo o [Postman](https://www.postman.com), para fazer a execução da API.
+Você pode usar uma plataforma, como por exemplo o [Postman](https://www.postman.com), para fazer a execução da API.
 
 Por padrão, o serviço estará disponível na porta 8900 de seu host. Ex: http://localhost:8900
 
@@ -128,6 +128,4 @@ A versão completa dos layouts implementados pode ser encontrada no package [lar
 
 Este repositório está licenciado sob [Licença MIT](https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE).
 
-O software é fornecido no estado em que se encontra e não fazemos promessas nem fornecemos garantias sobre o mesmo. 
-
-Não seremos responsáveis por danos nem perdas decorrentes do uso ou da incapacidade de usar o software ou de outra forma decorrentes deste contrato. Leia atentamente esta seção; ela limita nossas obrigações perante você.
+O software é fornecido "tal como está", sem garantia de qualquer tipo, expressa ou implícita, incluindo, mas não se limitando às garantias de comercialização, conveniência para um propósito específico e não infração. Em nenhuma situação devem os autores ou titulares de direitos autorais serem responsáveis por qualquer reivindicação, dano ou outras responsabilidades, seja em ação de contrato, prejuízo ou outra forma, decorrente de, fora de ou em conexão com o software ou o uso ou outras relações com o software.
