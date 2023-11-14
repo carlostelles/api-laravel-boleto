@@ -66,7 +66,7 @@ class ApiResource extends JsonResource
             'status' => 0,
             'message' => '',
             'remessa' => $arquivo,
-            'data' => BoletoResource::collection($boletos),
+            'boletos' => BoletoResource::collection($boletos),
         ]);
 
     }
