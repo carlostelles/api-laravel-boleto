@@ -48,6 +48,7 @@ class BoletoResource extends JsonResource
         // cria o pdf do boleto
         $pdf = new Pdf();
         $pdf->addBoleto($boleto);
+        $pdf->hideInstrucoes();
         $arquivo = uniqid($banco) . '.pdf';
         Storage::put($arquivo, $pdf->gerarBoleto($pdf::OUTPUT_STRING));
 
