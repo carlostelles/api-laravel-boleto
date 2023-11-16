@@ -19,11 +19,13 @@ git clone https://github.com/trezzuri/api-laravel-boleto
 docker compose up -d
 ```
 
-## Documentação
+## Informações Gerais
 
 A documentação da API está disponível no Redocly: https://api-laravel-boleto.redoc.ly/
 
 Para acessá-la, é necessário realizar login no Redocly.
+
+Os arquivos gerados pela API são mantidos por até **7 dias**, após isso são **apagados**.
 
 ## Como Usar
 
