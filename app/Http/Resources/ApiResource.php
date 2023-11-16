@@ -14,15 +14,17 @@ class ApiResource extends JsonResource
     /**
      * Create a new resource instance.
      *
-     * @param  mixed  $resource
-     * @return void
+     * @param  mixed  ...$parameters
+     * @return static
      */
-    public function __construct($resource)
+    public static function make(...$parameters)
     {
+        // o parametro 0 deve ser a Request
+        $request = $parameters[0];
+
         // obtém os dados do banco 
-        // código COMPE do banco com 3 dígitos
-        $banco = $resource['banco'];
-        $compe = substr('000' . $banco['codigo_compe'], -3); 
+        $banco = $request['banco'];
+        $compe = $banco['codigo_compe']; 
 
         // remove do array de dados do banco os itens vazios (não obrigatórios), 
         // para evitar mensagens de erro desnecessárias
@@ -31,33 +33,25 @@ class ApiResource extends JsonResource
         });        
 
         // obtém dados do beneficiário e transforma em objeto
-        $beneficiario = $resource['beneficiario'];
+        $beneficiario = $request['beneficiario'];
         $obj_ben = new Pessoa($beneficiario);
 
         // obtém a url com o logo do beneficiario, senão usa o logo do banco
         $logo = $beneficiario['logo'] ?? realpath(base_path() . '/vendor/eduardokum/laravel-boleto/logos/' . $compe . '.png');
 
         // obtém os dados de cnab
-        $cnab = $resource['cnab'];
+        $cnab = $request['cnab'];
         $layout = $cnab['layout'] ?? '400';
 
         // verifica se o banco está implementado
         if (! class_exists('\\Eduardokum\\LaravelBoleto\\Boleto\\' . Util::getBancoClass($compe))) {
-            parent::__construct([
-                'status' => 1,
-                'message' => 'Boleto não foi implementado para o banco ' . $compe,
-            ]);
-            return;
+            throw new \Exception('Boleto não foi implementado para o banco ' . $compe);
         }
 
         // verifica se o layout cnab está implementado
         $classe = '\\Eduardokum\\LaravelBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . Util::getBancoClass($compe);
         if (! class_exists($classe)) {
-            parent::__construct([
-                'status' => 1,
-                'message' => 'Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $compe,
-            ]);
-            return;
+            throw new \Exception('Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $compe);
         }
 
         // Cria o objeto cnab
@@ -65,7 +59,7 @@ class ApiResource extends JsonResource
 
         // cria os boletos
         $boletos = [];
-        foreach ($resource['boletos'] as $boleto) {
+        foreach ($request['boletos'] as $boleto) {
 
             // preenche a url do logo
             $boleto['logo'] = $logo;
@@ -82,16 +76,31 @@ class ApiResource extends JsonResource
         $arquivo = uniqid($compe) . '.rem';
         Storage::put($arquivo, $obj_cnab->gerar());
 
-        // gera o resource 
-        parent::__construct([
-            'status' => 0,
-            'message' => '',
+        // cria o objeto resource
+        return new static([
             'remessa' => $arquivo,
             'boletos' => BoletoResource::collection($boletos),
         ]);
 
     }
 
+    /**
+     * Create a new resource instance.
+     *
+     * @param  mixed  $resource
+     * @return void
+     */
+    public function __construct($resource)
+    {
+        // gera o resource 
+        parent::__construct([
+            'status'   => isset($resource['status'])   ? $resource['status']   : 0,
+            'mensagem' => isset($resource['mensagem']) ? $resource['mensagem'] : '',
+            'remessa'  => isset($resource['remessa'])  ? $resource['remessa']  : '',
+            'boletos'  => isset($resource['boletos'])  ? $resource['boletos']  : [],
+        ]);
+
+    }
 
     /**
      * Transform the resource into an array.
@@ -101,5 +110,5 @@ class ApiResource extends JsonResource
     public function toArray(Request $request): array
     {
         return parent::toArray($request);
-    }
+    }        
 }

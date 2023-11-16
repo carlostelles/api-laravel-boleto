@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Http\Resources\ApiResource;
 
 class Handler extends ExceptionHandler
 {
@@ -28,13 +29,13 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // public function render($request, Throwable $e)
-    // {
-    //     $response = [
-    //         "status" => "1",
-    //         "message" => $e->getMessage(),
-    //     ];
-    
-    //     return response()->json($response, 400);
-    // }
+    public function render($request, Throwable $e)
+    {
+        // retorna os erros em formato JSON
+        $api = new ApiResource([
+            "status" => 400,
+            "mensagem" => $e->getMessage(),
+        ]);    
+        return response()->json($api->toArray($request), 400);
+    }
 }

@@ -93,21 +93,21 @@ A API irá retornar a seguinte estrutura:
 ```
 {
     "status": 0,
-    "message": "",
-    "remessa": "75665537f2c054c6.rem",
+    "mensagem": "",
+    "remessa": "001655613e9d6537.rem",
     "boletos": [
         {
-            "linha_digitavel": "75691.11110 01012.312300 00000.160010 1 95320000010000",
-            "codigo_barras": "75691953200000100001111101012312300000016001",
-            "nosso_numero": "00000016",
-            "nosso_numero_boleto": "0000001-6",
-            "pdf": "75665537f2c007f9.pdf"
+            "linha_digitavel": "00191.23124 30000.100112 00022.222111 2 92620001234567",
+            "codigo_barras": "00192926200012345671231230000100110002222211",
+            "nosso_numero": "12312300001",
+            "nosso_numero_boleto": "12312300001-2",
+            "pdf": "001655613e9d5247.pdf"
         }
     ]
 }
 ```
 
-Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint /file informando o nome do arquivo recebido no retorno do POST. Ex: http://localhost:8900/file/75665537f2c054c6.rem
+Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint /file informando o nome do arquivo recebido no retorno do POST. Ex: http://localhost:8900/file/001655613e9d6537.rem
 
 ## Bancos Implementados
 

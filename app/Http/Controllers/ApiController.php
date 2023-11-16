@@ -22,7 +22,8 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        return (new ApiResource($request->all()))->toArray($request);
+        $api = ApiResource::make($request->all());
+        return $api->toArray($request);
     }
 
     /**
