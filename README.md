@@ -1,6 +1,6 @@
 ## API laravel-boleto
 
-API em containers docker para geração de boletos e arquivos CNAB, utilizando como base o package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
 ## Pré-Requisitos
 
@@ -14,10 +14,16 @@ API em containers docker para geração de boletos e arquivos CNAB, utilizando c
 git clone https://github.com/trezzuri/api-laravel-boleto
 ```
 
-- Execute os containers
+- Execute o container
 ```
 docker compose up -d
 ```
+
+## Documentação
+
+A documentação da API está disponível no Redocly: https://api-laravel-boleto.redoc.ly/
+
+Para acessá-la, é necessário realizar login no Redocly.
 
 ## Como Usar
 
@@ -35,8 +41,8 @@ Exemplo de JSON a ser enviado para a API:
 ```
 {
   "banco": {
-    "codigo_compe": "001",
-    "agencia": "11",
+    "codigoCompe": "001",
+    "agencia": "0011",
     "conta": "22222",
     "carteira": "11",
     "convenio": "123123",
@@ -111,27 +117,26 @@ Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint
 
 ## Bancos Implementados
 
-| Código COMPE | CNAB 400 | CNAB 240 |
-| ------------ | :------: | :------: |
- | 001 - Banco do Brasil | Sim | Sim
- | 004 - Bnb | Sim | 
- | 033 - Santander | Sim | Sim
- | 041 - Banrisul | Sim | Sim
- | 077 - Inter | Sim | 
- | 104 - CEF | Sim | Sim
- | 136 - Unicred | Sim | 
- | 224 - Fibra | Sim | 
- | 237 - Bradesco | Sim | Sim
- | 341 - Itau | Sim | Sim
- | 399 - HSBC | Sim | 
- | 435 - Delcred | Sim | 
- | 643 - Pine | Sim | 
- | 712 - Ourinvest | Sim | 
- | 748 - Sicredi | Sim | Sim
- | 756 - Bancoob | Sim | Sim
+| Código COMPE | CNAB 400 | CNAB 240 | Carteiras Disponíveis |
+| ------------ | :------: | :------: | --------------------- |
+| 001 - Banco do Brasil | Sim | Sim | 11, 12, 15, 17, 18, 31, 51 |
+| 004 - Bnb | Sim | - | 21, 31, 41 |
+| 033 - Santander | Sim | Sim | 101, 201 |
+| 041 - Banrisul | Sim | Sim | 1 a 8, B a K, M, N, P a U, X |
+| 077 - Inter | Sim |  - | 112 |
+| 104 - CEF | Sim | Sim | RG |
+| 136 - Unicred | Sim |  - | 21 |
+| 224 - Fibra | Sim |  - | 0 |
+| 237 - Bradesco | Sim | Sim | 02, 04, 09, 21, 26 |
+| 341 - Itau | Sim | Sim | 112, 115, 188, 109, 121, 180, 110, 111 |
+| 399 - HSBC | Sim |  - | CSB |
+| 435 - Delcred | Sim |  - | 112, 121 |
+| 643 - Pine | Sim |  - | 0 |
+| 712 - Ourinvest | Sim |  - | 0 |
+| 748 - Sicredi | Sim | Sim | 1, 2, 3 |
+| 756 - Bancoob | Sim | Sim | 1, 3 |
 
-
-Mais detalhes sobre os bancos implementados podem ser encontrada no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para cada banco podem ser encontrados no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
 
 ## Licença

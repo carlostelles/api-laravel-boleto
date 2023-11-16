@@ -1,0 +1,421 @@
+openapi: 3.0.0
+
+servers:
+  - url: "http://localhost:8900"
+
+info:
+  title: api-laravel-boleto
+  description: |-
+    ## API para laravel-boleto
+
+    API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package 
+    [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+
+    Envie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos.
+
+    A API irá gerar:
+    - Vários arquivos PDF, um para cada boleto informado no array "boletos" do POST
+    - Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST
+
+    ## Bancos Implementados
+
+    | Código COMPE | CNAB 400 | CNAB 240 | Carteiras Disponíveis |
+    | ------------ | :------: | :------: | --------------------- |
+    | 001 - Banco do Brasil | Sim | Sim | 11, 12, 15, 17, 18, 31, 51 |
+    | 004 - Bnb | Sim | - | 21, 31, 41 |
+    | 033 - Santander | Sim | Sim | 101, 201 |
+    | 041 - Banrisul | Sim | Sim | 1 a 8, B a K, M, N, P a U, X |
+    | 077 - Inter | Sim |  - | 112 |
+    | 104 - CEF | Sim | Sim | RG |
+    | 136 - Unicred | Sim |  - | 21 |
+    | 224 - Fibra | Sim |  - | 0 |
+    | 237 - Bradesco | Sim | Sim | 02, 04, 09, 21, 26 |
+    | 341 - Itau | Sim | Sim | 112, 115, 188, 109, 121, 180, 110, 111 |
+    | 399 - HSBC | Sim |  - | CSB |
+    | 435 - Delcred | Sim |  - | 112, 121 |
+    | 643 - Pine | Sim |  - | 0 |
+    | 712 - Ourinvest | Sim |  - | 0 |
+    | 748 - Sicredi | Sim | Sim | 1, 2, 3 |
+    | 756 - Bancoob | Sim | Sim | 1, 3 |
+
+    Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
+    para cada banco podem ser encontrados no package 
+    [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+
+  version: v1
+  license:
+    name: MIT
+    url: "https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE"
+
+paths:
+  /api:
+    post:
+      operationId: api
+      summary: POST /api
+      description: Endpoint para a geração de boletos e arquivo CNAB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        "200":
+          description: Boletos gerados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+
+  /file/{filename}:
+    get:
+      operationId: file
+      summary: GET /file
+      description: Endpoint para download de arquivos PDF ou REM gerados pela API
+      responses:
+        "200":
+          description: Download realizado
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+components:
+  schemas:
+    Request:
+      description: Estrutura da request a ser enviada para a API
+      type: object
+      required:
+      - banco
+      - beneficiario
+      - cnab
+      - boletos
+      properties:
+        banco:
+          $ref: "#/components/schemas/Banco"
+        beneficiario:
+          $ref: "#/components/schemas/Beneficiario"
+        cnab:
+          $ref: "#/components/schemas/Cnab"
+        boletos:
+          type: array
+          description: Dados dos boletos a serem gerados
+          items:
+            $ref: "#/components/schemas/Boleto"
+
+    Response:
+      description: Estrutura da response retornada pela API
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 0
+          description: |-
+            Status do processamento. 
+            Se zero, sucesso; diferente de zero, ver campo mensagem.
+        mensagem:
+          type: string
+          example: ""
+          description: Mensagem de erro ocorrida durante o processamento
+        remessa:
+          type: string
+          example: "001655613e9d6537.rem"
+          description: Nome do arquivo da remessa, a ser usado pelo endpoint /file para download
+        boletos:
+          type: array
+          description: Dados dos boletos criados pela API
+          items:
+            $ref: "#/components/schemas/BoletoResponse"
+
+    Beneficiario:
+      description: Dados do beneficiário
+      type: object
+      required:
+      - nome
+      - endereco
+      - cep
+      - uf
+      - cidade
+      - documento
+      properties:
+        nome:
+          description: Nome ou razão social do beneficiário
+          type: string
+          example: "ACME"
+        endereco:
+          description: Endereço do beneficiário
+          type: string
+          example: "Rua um, 123"
+        cep:
+          description: CEP do beneficiário
+          type: string
+          example: "99999-999"
+        uf:
+          description: UF do beneficiário
+          type: string
+          example: "UF"
+        cidade:
+          description: Cidade do beneficiário
+          type: string
+          example: "CIDADE"
+        documento:
+          description: CNPJ ou CPF do beneficiário
+          type: string
+          example: "99.999.999/9999-99"
+        logo:
+          description: |-
+            URL para a imagem do logotipo do beneficiário, em formato png ou jpg,
+            que será usada na geração do PDF do boleto.
+            Caso não seja preenchido, será usado o logo do banco emissor.
+          type: string
+          example: ""
+
+    Pagador:
+      description: Dados do pagador
+      type: object
+      required:
+      - nome
+      - endereco
+      - cep
+      - uf
+      - cidade
+      - documento
+      properties:
+        nome:
+          description: Nome do pagador
+          type: string
+          example: "Cliente"
+        endereco:
+          description: Endereço do pagador
+          type: string
+          example: "Rua um, 123"
+        bairro:
+          description: Bairro do pagador
+          type: string
+          example: "Bairro"
+        cep:
+          description: CEP do pagador
+          type: string
+          example: "99999-999"
+        uf:
+          description: UF do pagador
+          type: string
+          example: "UF"
+        cidade:
+          description: Cidade do pagador
+          type: string
+          example: "CIDADE"
+        documento:
+          description: CNPJ ou CPF do pagador
+          type: string
+          example: "999.999.999-99"
+
+    Banco:
+      description: Dados do banco emissor e demais parâmetros para a geração dos boletos
+      type: object
+      required:
+      - codigoCompe
+      - agencia
+      - conta
+      - carteira
+      properties:
+        codigoCompe:
+          description: Código COMPE do banco com 3 dígitos
+          type: string
+          example: "001"
+        agencia:
+          description: Número da agência bancária do beneficiário
+          type: string
+          example: "0011"
+        conta:
+          description: Conta bancária do beneficiário SEM o dígito verificador
+          type: string
+          example: "22222"
+        carteira:
+          description: |- 
+            Carteira de cobrança. 
+            Vide carteiras disponíveis para cada banco no descritivo da API.
+          type: string
+          example: "11"
+        convenio:
+          description: |-
+            Código do convênio do banco. Obrigatório apenas para os bancos:
+            001 - Banco do Brasil,
+            756 - Bancoob
+          type: string
+          example: "123123"
+        codigoCliente:
+          description: |-
+            Código do cliente no banco. Obrigatório apenas para os bancos:
+            033 - Santander,
+            104 - CEF,
+            224 - Fibra,
+            643 - Pine
+          type: string
+          example: ""
+        operacao:
+          description: |-
+            Obrigatório apenas para banco 077 - Inter. 
+            Consulte seu número da operação no internet banking.
+          type: string
+          example: ""
+        posto:
+          description: |-
+            Obrigatório apenas para banco 748 - Sicredi. 
+            Posto da cooperativa de crédito/agência beneficiária.
+          type: string
+          example: ""
+        range:
+          description: |- 
+            Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
+            Faixa de valor a ser usada para compor o "Nosso Número", 
+            consulte o banco para mais informações.
+          type: string
+          example: ""
+        byte:
+          description: |-
+            Obrigatório apenas para banco 748 - Sicredi. 
+            Informar valor de 2 a 9, significa que o "Nosso Número" foi gerado pelo beneficiário.
+          type: string
+          example: ""
+        modalidadeCarteira:
+          description: |- 
+            Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
+            Modalidade de cobrança com bancos correspondentes, 
+            consulte o banco para mais informações.
+          type: string
+          example: ""
+        variacaoCarteira:
+          description: |-
+            Obrigatório apenas para banco 001 - Banco do Brasil e CNAB240.
+            Informar o número da variação da carteira de cobrança.
+          type: string
+          example: ""
+        diasBaixaAutomatica:
+          description: |-
+            Dias para realização de baixa automática do boleto em caso de não pagamento.
+            Nem todos os bancos dispõem desta funcionalidade, consulte o banco.
+          type: integer
+          example: 0
+        diasProtesto:
+          description: |-
+            Dias para realização de protesto do boleto em caso de não pagamento.
+            Nem todos os bancos dispõem desta funcionalidade, consulte o banco.
+          type: integer
+          example: 0
+
+    Cnab:
+      description: Dados do arquivo CNAB
+      type: object
+      required:
+      - layout
+      - idremessa
+      properties:
+        layout:
+          description: |-
+            Layout do arquivo CNAB a ser gerado.
+            Valores válidos: "240" ou "400"
+          type: string
+          example: "400"
+        idremessa:
+          description: |-
+            Sequencial da remessa. 
+            Este é um número sequencial de arquivos enviados ao banco, 
+            devendo ser iniciado em 1 caso seja o primeiro arquivo CNAB enviado.
+            Incrementar este campo em 1 para cada novo arquivo enviado ao banco.
+          type: integer
+          example: 1
+
+    Boleto:
+      description: Dados do boleto a ser gerado
+      type: object
+      required:
+      - pagador
+      - numero
+      - numeroDocumento
+      - dataVencimento
+      - valor
+      - multa
+      - juros
+      - aceite
+      - especieDoc
+      properties:
+        pagador:
+          description: Dados do pagador
+          $ref: "#/components/schemas/Pagador"
+        numero:
+          type: integer
+          example: 1
+          description: Número do boleto, que irá compor o "Nosso Número"
+        numeroDocumento:
+          type: string
+          example: "NF1010-1"
+          description: Número do documento. Um código que identifica a cobrança por parte do beneficiário
+        dataVencimento:
+          type: string
+          format: date
+          example: "2023-02-15"
+          description: Data de vencimento do boleto no formato AAAA-MM-DD
+        valor:
+          type: number
+          example: 12345.67
+          description: Valor do boleto
+        multa:
+          type: number
+          example: 0
+          description: Percentual da multa, aplicada em caso de atraso no pagamento
+        juros:
+          type: number
+          example: 0
+          description: Percentual dos juros de mora ao mês, aplicados em caso de atraso no pagamento
+        aceite:
+          type: integer
+          example: 0
+          description: |- 
+            Identificador de título aceito ou não aceito previamente pelo pagador.
+            Valores possíveis: 0 - Não aceito, 1 - Aceito. 
+        especieDoc:
+          type: string
+          example: "DM"
+          description: |-
+            Espécie do documento que originou a cobrança:
+            "DM": Mercadorias,
+            "DS": Serviços
+        descricaoDemonstrativo:
+          type: string
+          example: "Descrição do demonstrativo de cobrança"
+          description: Descrição do demonstrativo da cobrança
+        instrucoes:
+          type: string
+          example: "Descrição das instruções de cobrança"
+          description: Descrição das instruções de cobrança, que aparecem no corpo do boleto
+
+    BoletoResponse:
+      description: Dados do boleto gerado
+      type: object
+      properties:
+        linha_digitavel:
+          type: string
+          example: "00191.23124 30000.100112 00022.222111 2 92620001234567"
+          description: Linha digitável do boleto
+        codigo_barras:
+          type: string
+          example: "00192926200012345671231230000100110002222211"
+          description: Código de barras do boleto
+        nosso_numero:
+          type: string
+          example: "12312300001"
+          description: Campo "Nosso Número" do boleto
+        nosso_numero_boleto:
+          type: string
+          example: "12312300001-2"
+          description: Campo "Nosso Número" do boleto com o dígito verificador
+        pdf:
+          type: string
+          example: "001655613e9d5247.pdf"
+          description: Nome do arquivo PDF do boleto, a ser usado pelo endpoint /file para download
+
+externalDocs:
+  description: Para maiores informações, consulte o projeto no Github
+  url: https://github.com/trezzuri/api-laravel-boleto

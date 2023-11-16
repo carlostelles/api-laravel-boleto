@@ -24,7 +24,7 @@ class ApiResource extends JsonResource
 
         // obtém os dados do banco 
         $banco = $request['banco'];
-        $compe = $banco['codigo_compe']; 
+        $compe = $banco['codigoCompe']; 
 
         // remove do array de dados do banco os itens vazios (não obrigatórios), 
         // para evitar mensagens de erro desnecessárias
