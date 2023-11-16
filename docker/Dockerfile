@@ -32,22 +32,19 @@ RUN docker-php-ext-configure intl && \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Add user for laravel application
-RUN addgroup www && \
-    adduser -D -G www www && \
-    adduser www-data www && \
-    adduser nginx www
+RUN addgroup app && \
+    adduser -D -G app app && \
+    adduser www-data app && \
+    adduser nginx app
 
 # Copy existing application directory and set www as owner
-COPY --chown=www:www . /var/www/html 
+COPY --chown=app:app . /var/www/html 
 
 # Set .env file based on example
-COPY --chown=www:www ./.env.example /var/www/html/.env
-
-# Set write permission on storage folder
-RUN chmod -R ug+w /var/www/html/storage
+COPY --chown=app:app ./.env.example /var/www/html/.env
 
 # Change current user to www
-USER www
+USER app
 
 # Install composer packages and generate app key
 RUN composer install --optimize-autoloader --no-interaction

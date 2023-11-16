@@ -28,13 +28,13 @@ class Handler extends ExceptionHandler
         });
     }
 
-     public function render($request, Throwable $e)
-    {
-        $response = [
-            "status" => "1",
-            "message" => $e->getMessage(),
-        ];
+    // public function render($request, Throwable $e)
+    // {
+    //     $response = [
+    //         "status" => "1",
+    //         "message" => $e->getMessage(),
+    //     ];
     
-        return response()->json($response, 400);
-    }
+    //     return response()->json($response, 400);
+    // }
 }

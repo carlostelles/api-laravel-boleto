@@ -31,51 +31,61 @@ A API irá gerar:
 - Vários arquivos PDF, um para cada boleto informado no array "boletos" do POST
 - Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST
 
-A estrutura do JSON esperado pela API é a seguinte:
+Exemplo de JSON a ser enviado para a API:
 ```
 {
-   "data": {
-      "banco": "756",
-      "layout_cnab": "400",
-      "logo": "",
-      "beneficiario": {
-         "nome": "ACME",
-         "endereco": "Rua um, 123",
-         "cep": "99999-999",
-         "uf": "UF",
-         "cidade": "CIDADE",
-         "documento": "99.999.999/9999-99"
+  "banco": {
+    "codigo_compe": "001",
+    "agencia": "11",
+    "conta": "22222",
+    "carteira": "11",
+    "convenio": "123123",
+    "codigoCliente": "",
+    "operacao": "",
+    "posto": "",
+    "range": "",
+    "byte": "",
+    "modalidadeCarteira": "",
+    "variacaoCarteira": "",
+    "diasBaixaAutomatica": "",
+    "diasProtesto": ""
+  },
+  "beneficiario": {
+    "nome": "ACME",
+    "endereco": "Rua um, 123",
+    "cep": "99999-999",
+    "uf": "UF",
+    "cidade": "CIDADE",
+    "documento": "99.999.999/9999-99",
+    "logo": ""
+  },
+  "cnab": {
+    "layout": "400",
+    "idremessa": 1
+  },
+  "boletos": [
+    {
+      "pagador": {
+        "nome": "Cliente",
+        "endereco": "Rua um, 123",
+        "bairro": "Bairro",
+        "cep": "99999-999",
+        "uf": "UF",
+        "cidade": "CIDADE",
+        "documento": "999.999.999-99"
       },
-      "conta": {
-         "agencia": 1111,
-         "conta": 22222,
-         "carteira": 1,
-         "convenio": 123123
-      },
-      "boletos": [
-         {
-            "dataVencimento": "2023-02-15",
-            "valor": 10000,
-            "multa": false,
-            "juros": false,
-            "numero": 1,
-            "numeroDocumento": 1,
-            "pagador": {
-               "nome": "Cliente",
-               "endereco": "Rua um, 123",
-               "bairro": "Bairro",
-               "cep": "99999-999",
-               "uf": "UF",
-               "cidade": "CIDADE",
-               "documento": "999999999-99"
-            },
-            "descricaoDemonstrativo": "Descrição do Demonstrativo",
-            "instrucoes": "Descrição das Instruções de Cobrança",
-            "aceite": "S",
-            "especieDoc": "DM"
-         }
-      ]
-   }
+      "numero": 1,
+      "numeroDocumento": 1,
+      "dataVencimento": "2023-02-15",
+      "valor": 12345.67,
+      "multa": 0,
+      "juros": 0,
+      "descricaoDemonstrativo": "Descrição do demonstrativo de cobrança",
+      "instrucoes": "Descrição das instruções de cobrança",
+      "aceite": 0,
+      "especieDoc": "DM"
+    }
+  ]
 }
 ```
 
@@ -121,7 +131,7 @@ Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint
  | 756 - Bancoob | Sim | Sim
 
 
-A versão completa dos layouts implementados pode ser encontrada no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+Mais detalhes sobre os bancos implementados podem ser encontrada no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
 
 ## Licença

@@ -21,40 +21,44 @@ class BoletoResource extends JsonResource
      */
     public static function make(...$parameters)
     {
-        // o parametro 0 é o codigo do banco
-        $banco = $parameters[0];
-        $classe = '\\Eduardokum\\LaravelBoleto\\Boleto\\' . Util::getBancoClass($banco);
+        // o parametro 0 é o codigo COMPE do banco 
+        $compe = $parameters[0];
+        $classe = '\\Eduardokum\\LaravelBoleto\\Boleto\\' . Util::getBancoClass($compe);
 
-        // o parâmetro 1 são os dados do boleto
-        $dados = $parameters[1];
+        // o parâmetro 1 são os dados do banco
+        $banco = $parameters[1];
 
         // o parâmetro 2 é o beneficiário
-        $dados['beneficiario'] = $parameters[2];
+        $obj_ben = $parameters[2];
         
-        // o parâmetro 3 são os dados de conta, para inserir no array de dados do boleto
-        foreach ($parameters[3] as $item => $valor) {
-            $dados[$item] = $valor;
-        }
+        // o parâmetro 3 são os dados do boleto
+        $boleto = $parameters[3];
 
-        // transforma os dados para o formato esperado pela classe de boleto
-        $dados['pagador'] = new Pessoa($dados['pagador']);
-        $dados['dataVencimento'] = new Carbon($dados['dataVencimento']);
-        $dados['descricaoDemonstrativo'] = BoletoResource::texto_em_array($dados['descricaoDemonstrativo']);
-        $dados['instrucoes'] = BoletoResource::texto_em_array($dados['instrucoes']);
-
-        // cria o objeto boleto com a classe correspondente
-        $boleto = new $classe($dados);
+        // prepara os dados no formato esperado pela classe e cria o objeto
+        $obj_boleto = new $classe(array_merge(
+            $banco, 
+            $boleto, [
+            'beneficiario' => $obj_ben,
+            'pagador' => new Pessoa($boleto['pagador']),
+            'dataVencimento' => new Carbon($boleto['dataVencimento']),
+            'descricaoDemonstrativo' => is_array($boleto['descricaoDemonstrativo']) ? 
+                $boleto['descricaoDemonstrativo'] :
+                BoletoResource::texto_em_array($boleto['descricaoDemonstrativo']),
+            'instrucoes' => is_array($boleto['instrucoes']) ? 
+                $boleto['instrucoes'] :
+                BoletoResource::texto_em_array($boleto['instrucoes']),
+        ]));
 
         // cria o pdf do boleto
         $pdf = new Pdf();
-        $pdf->addBoleto($boleto);
+        $pdf->addBoleto($obj_boleto);
         $pdf->hideInstrucoes();
-        $arquivo = uniqid($banco) . '.pdf';
+        $arquivo = uniqid($compe) . '.pdf';
         Storage::put($arquivo, $pdf->gerarBoleto($pdf::OUTPUT_STRING));
 
         // cria o objeto resource
         return new static([
-            'boleto' => $boleto,
+            'boleto' => $obj_boleto,
             'pdf' => $arquivo
         ]);
 
@@ -81,7 +85,7 @@ class BoletoResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    private static function texto_em_array(string $texto, int $max_char = 40): array
+    private static function texto_em_array(string $texto, int $max_char = 60): array
     {
         $temp = wordwrap($texto, $max_char, "\n", true);
 

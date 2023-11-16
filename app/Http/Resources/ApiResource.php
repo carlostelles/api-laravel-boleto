@@ -19,45 +19,68 @@ class ApiResource extends JsonResource
      */
     public function __construct($resource)
     {
-        // obtém os dados de banco e layout do cnab
+        // obtém os dados do banco 
+        // código COMPE do banco com 3 dígitos
         $banco = $resource['banco'];
-        $dados_conta = $resource['conta'];
-        $layout = $resource['layout_cnab'] ?? '240';
+        $compe = substr('000' . $banco['codigo_compe'], -3); 
 
-        // verifica se o layout cnab está implementado
-        $classe = '\\Eduardokum\\LaravelBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . Util::getBancoClass($banco);
-        if (! class_exists($classe)) {
+        // remove do array de dados do banco os itens vazios (não obrigatórios), 
+        // para evitar mensagens de erro desnecessárias
+        $banco = array_filter($banco, function ($item) {
+            return !empty($item);
+        });        
+
+        // obtém dados do beneficiário e transforma em objeto
+        $beneficiario = $resource['beneficiario'];
+        $obj_ben = new Pessoa($beneficiario);
+
+        // obtém a url com o logo do beneficiario, senão usa o logo do banco
+        $logo = $beneficiario['logo'] ?? realpath(base_path() . '/vendor/eduardokum/laravel-boleto/logos/' . $compe . '.png');
+
+        // obtém os dados de cnab
+        $cnab = $resource['cnab'];
+        $layout = $cnab['layout'] ?? '400';
+
+        // verifica se o banco está implementado
+        if (! class_exists('\\Eduardokum\\LaravelBoleto\\Boleto\\' . Util::getBancoClass($compe))) {
             parent::__construct([
                 'status' => 1,
-                'message' => 'Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $banco,
+                'message' => 'Boleto não foi implementado para o banco ' . $compe,
             ]);
             return;
         }
 
-        // transforma os dados do beneficiário e cria o objeto cnab
-        $beneficiario = new Pessoa($resource['beneficiario']);
-        $dados_conta['beneficiario'] = $beneficiario;
-        $cnab = new $classe($dados_conta);
+        // verifica se o layout cnab está implementado
+        $classe = '\\Eduardokum\\LaravelBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . Util::getBancoClass($compe);
+        if (! class_exists($classe)) {
+            parent::__construct([
+                'status' => 1,
+                'message' => 'Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $compe,
+            ]);
+            return;
+        }
+
+        // Cria o objeto cnab
+        $obj_cnab = new $classe(array_merge($banco, $cnab, ['beneficiario' => $obj_ben]));
 
         // cria os boletos
         $boletos = [];
-        foreach ($resource['boletos'] as $dados_boleto) {
+        foreach ($resource['boletos'] as $boleto) {
 
-            // preenche a url do logo informado, senão traz o logo padrão do banco
-            $logo = $resource['logo'] ?? realpath(base_path() . '/vendor/eduardokum/laravel-boleto/logos/' . $banco . '.png');
-            $dados_boleto['logo'] = $logo;
+            // preenche a url do logo
+            $boleto['logo'] = $logo;
 
             // cria o resource
-            $boleto_resource = BoletoResource::make($banco, $dados_boleto, $beneficiario, $dados_conta);
+            $boleto_resource = BoletoResource::make($compe, $banco, $obj_ben, $boleto);
             $boletos[] = $boleto_resource;
 
             // adiciona o boleto para geração do cnab
-            $cnab->addBoleto($boleto_resource['boleto']);
+            $obj_cnab->addBoleto($boleto_resource['boleto']);
         }
 
         // gera o arquivo de remessa cnab
-        $arquivo = uniqid($banco) . '.rem';
-        Storage::put($arquivo, $cnab->gerar());
+        $arquivo = uniqid($compe) . '.rem';
+        Storage::put($arquivo, $obj_cnab->gerar());
 
         // gera o resource 
         parent::__construct([
