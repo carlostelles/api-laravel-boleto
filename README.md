@@ -21,7 +21,7 @@ docker compose up -d
 
 ## Informações Gerais
 
-A documentação da API está disponível [na pasta openapi deste repo](https://github.com/trezzuri/api-laravel-boleto/blob/master/openapi/api-laravel-boleto.html)
+A documentação da API está disponível [aqui](https://trezzuri.github.io/api-laravel-boleto/)
 
 Os arquivos gerados pela API são mantidos por até **7 dias**, após isso são **apagados**.
 
