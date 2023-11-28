@@ -17,27 +17,6 @@ info:
     - Vários arquivos PDF, um para cada boleto informado no array "boletos" do POST
     - Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST
 
-    ## Bancos Implementados
-
-    | Código COMPE | CNAB 400 | CNAB 240 | Carteiras Disponíveis |
-    | ------------ | :------: | :------: | --------------------- |
-    | 001 - Banco do Brasil | Sim | Sim | 11, 12, 15, 17, 18, 31, 51 |
-    | 004 - Bnb | Sim | - | 21, 31, 41 |
-    | 033 - Santander | Sim | Sim | 101, 201 |
-    | 041 - Banrisul | Sim | Sim | 1 a 8, B a K, M, N, P a U, X |
-    | 077 - Inter | Sim |  - | 112 |
-    | 104 - CEF | Sim | Sim | RG |
-    | 136 - Unicred | Sim |  - | 21 |
-    | 224 - Fibra | Sim |  - | 0 |
-    | 237 - Bradesco | Sim | Sim | 02, 04, 09, 21, 26 |
-    | 341 - Itau | Sim | Sim | 112, 115, 188, 109, 121, 180, 110, 111 |
-    | 399 - HSBC | Sim |  - | CSB |
-    | 435 - Delcred | Sim |  - | 112, 121 |
-    | 643 - Pine | Sim |  - | 0 |
-    | 712 - Ourinvest | Sim |  - | 0 |
-    | 748 - Sicredi | Sim | Sim | 1, 2, 3 |
-    | 756 - Bancoob | Sim | Sim | 1, 3 |
-
     Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
     para cada banco podem ser encontrados no package 
     [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
