@@ -141,6 +141,22 @@ Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint
 Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para cada banco podem ser encontrados no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
 
+## Customizando a imagem Docker
+
+Caso você deseje customizar a imagem Docker:
+
+* Faça um fork do projeto
+* Realize suas alterações
+* Modifique o nome da imagem no docker-compose.yaml, trocando a linha "image: trezzuri/api-laravel-boleto" por outro repo
+* Execute:
+
+```
+docker compose build
+docker compose push
+
+```
+
+
 ## Licença
 
 Este repositório está licenciado sob [Licença MIT](https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE).
