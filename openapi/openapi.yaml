@@ -403,6 +403,14 @@ components:
           type: string
           example: "00192926200012345671231230000100110002222211"
           description: Código de barras do boleto
+        numero:
+          type: integer
+          example: 1
+          description: Número do boleto, que compõe o "Nosso Número"
+        numeroDocumento:
+          type: string
+          example: "NF1010-1"
+          description: Número do documento. Um código que identifica a cobrança por parte do beneficiário
         nosso_numero:
           type: string
           example: "12312300001"

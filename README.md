@@ -21,9 +21,7 @@ docker compose up -d
 
 ## Informações Gerais
 
-A documentação da API está disponível no Redocly: https://api-laravel-boleto.redoc.ly/
-
-Para acessá-la, é necessário realizar login no Redocly.
+A documentação da API está disponível [na pasta openapi deste repo](https://github.com/trezzuri/api-laravel-boleto/blob/master/openapi/api-laravel-boleto.html)
 
 Os arquivos gerados pela API são mantidos por até **7 dias**, após isso são **apagados**.
 
@@ -83,7 +81,7 @@ Exemplo de JSON a ser enviado para a API:
         "documento": "999.999.999-99"
       },
       "numero": 1,
-      "numeroDocumento": 1,
+      "numeroDocumento": "DOC1234567",
       "dataVencimento": "2023-02-15",
       "valor": 12345.67,
       "multa": 0,
@@ -107,6 +105,8 @@ A API irá retornar a seguinte estrutura:
         {
             "linha_digitavel": "00191.23124 30000.100112 00022.222111 2 92620001234567",
             "codigo_barras": "00192926200012345671231230000100110002222211",
+            "numero": 1,
+            "numero_documento": "DOC1234567",
             "nosso_numero": "12312300001",
             "nosso_numero_boleto": "12312300001-2",
             "pdf": "001655613e9d5247.pdf"

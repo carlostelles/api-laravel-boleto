@@ -74,6 +74,8 @@ class BoletoResource extends JsonResource
         return [
             'linha_digitavel' => $this['boleto']->getLinhaDigitavel(),
             'codigo_barras' => $this['boleto']->getCodigoBarras(),
+            'numero' => $this['boleto']->getNumero(),
+            'numero_documento' => $this['boleto']->getNumeroDocumento(),
             'nosso_numero' => $this['boleto']->getNossoNumero(),
             'nosso_numero_boleto' => $this['boleto']->getNossoNumeroBoleto(),
             'pdf' => $this['pdf'],

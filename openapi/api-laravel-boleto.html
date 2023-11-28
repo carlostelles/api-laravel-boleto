@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8" />
+  <title>api-laravel-boleto</title>
+  <!-- needed for adaptive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="https://cdn.redoc.ly/redoc/v2.1.2/bundles/redoc.standalone.js"></script><style data-styled="true" data-styled-version="6.1.1">.gvoNGN{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.gvoNGN{width:100%;padding:40px 40px;}}/*!sc*/
+.jIkZBx{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.jIkZBx{width:100%;padding:0px 40px;}}/*!sc*/
+data-styled.g4[id="sc-hKgKIp"]{content:"gvoNGN,jIkZBx,"}/*!sc*/
+.kxmVZO{padding:40px 0;}/*!sc*/
+.kxmVZO:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.kxmVZO>.kxmVZO:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.kxmVZO{padding:0;}}/*!sc*/
+.bCpIRB{padding:40px 0;position:relative;}/*!sc*/
+.bCpIRB:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.bCpIRB>.bCpIRB:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.bCpIRB{padding:0;}}/*!sc*/
+.bCpIRB:not(:last-of-type):after{position:absolute;bottom:0;width:100%;display:block;content:'';border-bottom:1px solid rgba(0, 0, 0, 0.2);}/*!sc*/
+data-styled.g5[id="sc-eCstZk"]{content:"kxmVZO,bCpIRB,"}/*!sc*/
+.QymcT{width:40%;color:#ffffff;background-color:#263238;padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.QymcT{width:100%;padding:40px 40px;}}/*!sc*/
+data-styled.g6[id="sc-jSguLX"]{content:"QymcT,"}/*!sc*/
+.bZqtR{background-color:#263238;}/*!sc*/
+data-styled.g7[id="sc-gKsecS"]{content:"bZqtR,"}/*!sc*/
+.keMybc{display:flex;width:100%;padding:0;}/*!sc*/
+@media print,screen and (max-width: 75rem){.keMybc{flex-direction:column;}}/*!sc*/
+data-styled.g8[id="sc-iBPTVF"]{content:"keMybc,"}/*!sc*/
+.djltfY{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#333333;}/*!sc*/
+data-styled.g9[id="sc-fubDmA"]{content:"djltfY,"}/*!sc*/
+.biKwui{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;margin:0 0 20px;}/*!sc*/
+data-styled.g10[id="sc-pGaPU"]{content:"biKwui,"}/*!sc*/
+.jmifsN{color:#ffffff;}/*!sc*/
+data-styled.g12[id="sc-kEjbdu"]{content:"jmifsN,"}/*!sc*/
+.bRzaSI{border-bottom:1px solid rgba(38, 50, 56, 0.3);margin:1em 0 1em 0;color:rgba(38, 50, 56, 0.5);font-weight:normal;text-transform:uppercase;font-size:0.929em;line-height:20px;}/*!sc*/
+data-styled.g13[id="sc-iqHXzD"]{content:"bRzaSI,"}/*!sc*/
+.sc-crrtmM{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.jGBpue:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+h1:hover>.jGBpue::before,h2:hover>.jGBpue::before,.jGBpue:hover::before{visibility:visible;}/*!sc*/
+data-styled.g14[id="sc-crrtmM"]{content:"jGBpue,"}/*!sc*/
+.cKHJqV{height:18px;width:18px;min-width:18px;vertical-align:middle;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.iHKCKT{height:1.5em;width:1.5em;min-width:1.5em;vertical-align:middle;float:left;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.iHKCKT polygon{fill:#1d8127;}/*!sc*/
+.hHbBnT{height:20px;width:20px;min-width:20px;vertical-align:middle;float:right;transition:transform 0.2s ease-out;transform:rotateZ(0);}/*!sc*/
+.hHbBnT polygon{fill:white;}/*!sc*/
+data-styled.g15[id="sc-dQpIV"]{content:"cKHJqV,iHKCKT,hHbBnT,"}/*!sc*/
+.gPUvwc{border-left:1px solid #7c7cbb;box-sizing:border-box;position:relative;padding:10px 10px 10px 0;}/*!sc*/
+@media screen and (max-width: 50rem){.gPUvwc{display:block;overflow:hidden;}}/*!sc*/
+tr:first-of-type>.gPUvwc,tr.last>.gPUvwc{border-left-width:0;background-position:top left;background-repeat:no-repeat;background-size:1px 100%;}/*!sc*/
+tr:first-of-type>.gPUvwc{background-image:linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 22px,
+      #7c7cbb 22px,
+      #7c7cbb 100%
+    );}/*!sc*/
+tr.last>.gPUvwc{background-image:linear-gradient(
+      to bottom,
+      #7c7cbb 0%,
+      #7c7cbb 22px,
+      transparent 22px,
+      transparent 100%
+    );}/*!sc*/
+tr.last+tr>.gPUvwc{border-left-color:transparent;}/*!sc*/
+tr.last:first-child>.gPUvwc{background:none;border-left-color:transparent;}/*!sc*/
+data-styled.g18[id="sc-hBEZvw"]{content:"gPUvwc,"}/*!sc*/
+.gXIfsF{vertical-align:top;line-height:20px;white-space:nowrap;font-size:13px;font-family:Courier,monospace;}/*!sc*/
+.gXIfsF.deprecated{text-decoration:line-through;color:#707070;}/*!sc*/
+data-styled.g20[id="sc-fFubCH"]{content:"gXIfsF,"}/*!sc*/
+.kMAhqG{border-bottom:1px solid #9fb4be;padding:10px 0;width:75%;box-sizing:border-box;}/*!sc*/
+tr.expanded .kMAhqG{border-bottom:none;}/*!sc*/
+@media screen and (max-width: 50rem){.kMAhqG{padding:0 20px;border-bottom:none;border-left:1px solid #7c7cbb;}tr.last>.kMAhqG{border-left:none;}}/*!sc*/
+data-styled.g21[id="sc-bkzXAi"]{content:"kMAhqG,"}/*!sc*/
+.jwsifT{color:#7c7cbb;font-family:Courier,monospace;margin-right:10px;}/*!sc*/
+.jwsifT::before{content:'';display:inline-block;vertical-align:middle;width:10px;height:1px;background:#7c7cbb;}/*!sc*/
+.jwsifT::after{content:'';display:inline-block;vertical-align:middle;width:1px;background:#7c7cbb;height:7px;}/*!sc*/
+data-styled.g22[id="sc-idOjMB"]{content:"jwsifT,"}/*!sc*/
+.buUaAP{border-collapse:separate;border-radius:3px;font-size:14px;border-spacing:0;width:100%;}/*!sc*/
+.buUaAP >tr{vertical-align:middle;}/*!sc*/
+@media screen and (max-width: 50rem){.buUaAP{display:block;}.buUaAP >tr,.buUaAP >tbody>tr{display:block;}}/*!sc*/
+@media screen and (max-width: 50rem) and (-ms-high-contrast:none){.buUaAP td{float:left;width:100%;}}/*!sc*/
+.buUaAP .sc-dIUfKc,.buUaAP .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc,.buUaAP .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc{margin:1em;margin-right:0;background:#fafafa;}/*!sc*/
+.buUaAP .sc-dIUfKc .sc-dIUfKc,.buUaAP .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc,.buUaAP .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc .sc-dIUfKc{background:#ffffff;}/*!sc*/
+data-styled.g24[id="sc-hHftZz"]{content:"buUaAP,"}/*!sc*/
+.jVRsAZ >ul{list-style:none;padding:0;margin:0;margin:0 -5px;}/*!sc*/
+.jVRsAZ >ul >li{padding:5px 10px;display:inline-block;background-color:#11171a;border-bottom:1px solid rgba(0, 0, 0, 0.5);cursor:pointer;text-align:center;outline:none;color:#ccc;margin:0 5px 5px 5px;border:1px solid #07090b;border-radius:5px;min-width:60px;font-size:0.9em;font-weight:bold;}/*!sc*/
+.jVRsAZ >ul >li.react-tabs__tab--selected{color:#333333;background:#ffffff;}/*!sc*/
+.jVRsAZ >ul >li.react-tabs__tab--selected:focus{outline:auto;}/*!sc*/
+.jVRsAZ >ul >li:only-child{flex:none;min-width:100px;}/*!sc*/
+.jVRsAZ >ul >li.tab-success{color:#1d8127;}/*!sc*/
+.jVRsAZ >ul >li.tab-redirect{color:#ffa500;}/*!sc*/
+.jVRsAZ >ul >li.tab-info{color:#87ceeb;}/*!sc*/
+.jVRsAZ >ul >li.tab-error{color:#d41f1c;}/*!sc*/
+.jVRsAZ >.react-tabs__tab-panel{background:#11171a;}/*!sc*/
+.jVRsAZ >.react-tabs__tab-panel>div,.jVRsAZ >.react-tabs__tab-panel>pre{padding:20px;margin:0;}/*!sc*/
+.jVRsAZ >.react-tabs__tab-panel>div>pre{padding:0;}/*!sc*/
+data-styled.g30[id="sc-cxFKTC"]{content:"jVRsAZ,"}/*!sc*/
+.gpkGbA code[class*='language-'],.gpkGbA pre[class*='language-']{text-shadow:0 -0.1em 0.2em black;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;}/*!sc*/
+@media print{.gpkGbA code[class*='language-'],.gpkGbA pre[class*='language-']{text-shadow:none;}}/*!sc*/
+.gpkGbA pre[class*='language-']{padding:1em;margin:0.5em 0;overflow:auto;}/*!sc*/
+.gpkGbA .token.comment,.gpkGbA .token.prolog,.gpkGbA .token.doctype,.gpkGbA .token.cdata{color:hsl(30, 20%, 50%);}/*!sc*/
+.gpkGbA .token.punctuation{opacity:0.7;}/*!sc*/
+.gpkGbA .namespace{opacity:0.7;}/*!sc*/
+.gpkGbA .token.property,.gpkGbA .token.tag,.gpkGbA .token.number,.gpkGbA .token.constant,.gpkGbA .token.symbol{color:#4a8bb3;}/*!sc*/
+.gpkGbA .token.boolean{color:#e64441;}/*!sc*/
+.gpkGbA .token.selector,.gpkGbA .token.attr-name,.gpkGbA .token.string,.gpkGbA .token.char,.gpkGbA .token.builtin,.gpkGbA .token.inserted{color:#a0fbaa;}/*!sc*/
+.gpkGbA .token.selector+a,.gpkGbA .token.attr-name+a,.gpkGbA .token.string+a,.gpkGbA .token.char+a,.gpkGbA .token.builtin+a,.gpkGbA .token.inserted+a,.gpkGbA .token.selector+a:visited,.gpkGbA .token.attr-name+a:visited,.gpkGbA .token.string+a:visited,.gpkGbA .token.char+a:visited,.gpkGbA .token.builtin+a:visited,.gpkGbA .token.inserted+a:visited{color:#4ed2ba;text-decoration:underline;}/*!sc*/
+.gpkGbA .token.property.string{color:white;}/*!sc*/
+.gpkGbA .token.operator,.gpkGbA .token.entity,.gpkGbA .token.url,.gpkGbA .token.variable{color:hsl(40, 90%, 60%);}/*!sc*/
+.gpkGbA .token.atrule,.gpkGbA .token.attr-value,.gpkGbA .token.keyword{color:hsl(350, 40%, 70%);}/*!sc*/
+.gpkGbA .token.regex,.gpkGbA .token.important{color:#e90;}/*!sc*/
+.gpkGbA .token.important,.gpkGbA .token.bold{font-weight:bold;}/*!sc*/
+.gpkGbA .token.italic{font-style:italic;}/*!sc*/
+.gpkGbA .token.entity{cursor:help;}/*!sc*/
+.gpkGbA .token.deleted{color:red;}/*!sc*/
+data-styled.g32[id="sc-iJuWdM"]{content:"gpkGbA,"}/*!sc*/
+.bIDavi{opacity:0.7;transition:opacity 0.3s ease;text-align:right;}/*!sc*/
+.bIDavi:focus-within{opacity:1;}/*!sc*/
+.bIDavi >button{background-color:transparent;border:0;color:inherit;padding:2px 10px;font-family:Roboto,sans-serif;font-size:14px;line-height:1.5em;cursor:pointer;outline:0;}/*!sc*/
+.bIDavi >button :hover,.bIDavi >button :focus{background:rgba(255, 255, 255, 0.1);}/*!sc*/
+data-styled.g33[id="sc-giInvV"]{content:"bIDavi,"}/*!sc*/
+.eJckYb{position:relative;}/*!sc*/
+data-styled.g37[id="sc-kLgoAE"]{content:"eJckYb,"}/*!sc*/
+.duVBEA{margin-left:10px;text-transform:none;font-size:0.929em;color:black;}/*!sc*/
+data-styled.g41[id="sc-gWHiUp"]{content:"duVBEA,"}/*!sc*/
+.casAkG{font-family:Roboto,sans-serif;font-weight:400;line-height:1.5em;}/*!sc*/
+.casAkG p:last-child{margin-bottom:0;}/*!sc*/
+.casAkG h1{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#32329f;margin-top:0;}/*!sc*/
+.casAkG h2{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;}/*!sc*/
+.casAkG code{color:#e53935;background-color:rgba(38, 50, 56, 0.05);font-family:Courier,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.casAkG pre{font-family:Courier,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.casAkG pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.casAkG pre code:before,.casAkG pre code:after{content:none;}/*!sc*/
+.casAkG blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.casAkG img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.casAkG ul,.casAkG ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.casAkG ul ul,.casAkG ol ul,.casAkG ul ol,.casAkG ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.casAkG table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.casAkG table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.casAkG table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.casAkG table th,.casAkG table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.casAkG table th{text-align:left;font-weight:bold;}/*!sc*/
+.casAkG .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.casAkG .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.casAkG h1:hover>.share-link::before,.casAkG h2:hover>.share-link::before,.casAkG .share-link:hover::before{visibility:visible;}/*!sc*/
+.casAkG a{text-decoration:auto;color:#32329f;}/*!sc*/
+.casAkG a:visited{color:#32329f;}/*!sc*/
+.casAkG a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+.dujygE{font-family:Roboto,sans-serif;font-weight:400;line-height:1.5em;}/*!sc*/
+.dujygE p:last-child{margin-bottom:0;}/*!sc*/
+.dujygE p:first-child{margin-top:0;}/*!sc*/
+.dujygE p:last-child{margin-bottom:0;}/*!sc*/
+.dujygE h1{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#32329f;margin-top:0;}/*!sc*/
+.dujygE h2{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;}/*!sc*/
+.dujygE code{color:#e53935;background-color:rgba(38, 50, 56, 0.05);font-family:Courier,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.dujygE pre{font-family:Courier,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.dujygE pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.dujygE pre code:before,.dujygE pre code:after{content:none;}/*!sc*/
+.dujygE blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.dujygE img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.dujygE ul,.dujygE ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.dujygE ul ul,.dujygE ol ul,.dujygE ul ol,.dujygE ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.dujygE table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.dujygE table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.dujygE table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.dujygE table th,.dujygE table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.dujygE table th{text-align:left;font-weight:bold;}/*!sc*/
+.dujygE .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.dujygE .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.dujygE h1:hover>.share-link::before,.dujygE h2:hover>.share-link::before,.dujygE .share-link:hover::before{visibility:visible;}/*!sc*/
+.dujygE a{text-decoration:auto;color:#32329f;}/*!sc*/
+.dujygE a:visited{color:#32329f;}/*!sc*/
+.dujygE a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+data-styled.g42[id="sc-cBNeRQ"]{content:"casAkG,dujygE,"}/*!sc*/
+.bzkUsW{display:inline;}/*!sc*/
+data-styled.g43[id="sc-citwID"]{content:"bzkUsW,"}/*!sc*/
+.iVrxDL{position:relative;}/*!sc*/
+data-styled.g44[id="sc-jcVcfa"]{content:"iVrxDL,"}/*!sc*/
+.gLzJQv:hover>.sc-giInvV{opacity:1;}/*!sc*/
+data-styled.g49[id="sc-cTkyaV"]{content:"gLzJQv,"}/*!sc*/
+.jXmkAn{font-family:Courier,monospace;font-size:13px;white-space:pre;contain:content;overflow-x:auto;}/*!sc*/
+.jXmkAn .redoc-json code>.collapser{display:none;pointer-events:none;}/*!sc*/
+.jXmkAn .callback-function{color:gray;}/*!sc*/
+.jXmkAn .collapser:after{content:'-';cursor:pointer;}/*!sc*/
+.jXmkAn .collapsed>.collapser:after{content:'+';cursor:pointer;}/*!sc*/
+.jXmkAn .ellipsis:after{content:' … ';}/*!sc*/
+.jXmkAn .collapsible{margin-left:2em;}/*!sc*/
+.jXmkAn .hoverable{padding-top:1px;padding-bottom:1px;padding-left:2px;padding-right:2px;border-radius:2px;}/*!sc*/
+.jXmkAn .hovered{background-color:rgba(235, 238, 249, 1);}/*!sc*/
+.jXmkAn .collapser{background-color:transparent;border:0;color:#fff;font-family:Courier,monospace;font-size:13px;padding-right:6px;padding-left:6px;padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:center;width:15px;height:15px;position:absolute;top:4px;left:-1.5em;cursor:default;user-select:none;-webkit-user-select:none;padding:2px;}/*!sc*/
+.jXmkAn .collapser:focus{outline-color:#fff;outline-style:dotted;outline-width:1px;}/*!sc*/
+.jXmkAn ul{list-style-type:none;padding:0px;margin:0px 0px 0px 26px;}/*!sc*/
+.jXmkAn li{position:relative;display:block;}/*!sc*/
+.jXmkAn .hoverable{display:inline-block;}/*!sc*/
+.jXmkAn .selected{outline-style:solid;outline-width:1px;outline-style:dotted;}/*!sc*/
+.jXmkAn .collapsed>.collapsible{display:none;}/*!sc*/
+.jXmkAn .ellipsis{display:none;}/*!sc*/
+.jXmkAn .collapsed>.ellipsis{display:inherit;}/*!sc*/
+data-styled.g50[id="sc-jNMdxs"]{content:"jXmkAn,"}/*!sc*/
+.bAzVww{padding:0.9em;background-color:rgba(38,50,56,0.4);margin:0 0 10px 0;display:block;font-family:Montserrat,sans-serif;font-size:0.929em;line-height:1.5em;}/*!sc*/
+data-styled.g51[id="sc-dOSSlk"]{content:"bAzVww,"}/*!sc*/
+.etjuEr{font-family:Montserrat,sans-serif;font-size:12px;position:absolute;z-index:1;top:-11px;left:12px;font-weight:600;color:rgba(255,255,255,0.7);}/*!sc*/
+data-styled.g52[id="sc-bBrOHt"]{content:"etjuEr,"}/*!sc*/
+.eDzWuJ{position:relative;}/*!sc*/
+data-styled.g53[id="sc-cOaiZO"]{content:"eDzWuJ,"}/*!sc*/
+.kTaCsY{margin-top:15px;}/*!sc*/
+data-styled.g56[id="sc-hTZhMB"]{content:"kTaCsY,"}/*!sc*/
+.hEcUkb button{background-color:transparent;border:0;outline:0;font-size:13px;font-family:Courier,monospace;cursor:pointer;padding:0;color:#333333;}/*!sc*/
+.hEcUkb button:focus{font-weight:600;}/*!sc*/
+.hEcUkb .sc-dQpIV{height:1.1em;width:1.1em;}/*!sc*/
+.hEcUkb .sc-dQpIV polygon{fill:#666;}/*!sc*/
+data-styled.g57[id="sc-jgHCeW"]{content:"hEcUkb,"}/*!sc*/
+.ihUpGF{vertical-align:middle;font-size:13px;line-height:20px;}/*!sc*/
+data-styled.g58[id="sc-gTgyBf"]{content:"ihUpGF,"}/*!sc*/
+.cREGdc{color:rgba(102,102,102,0.9);}/*!sc*/
+data-styled.g59[id="sc-laRQQM"]{content:"cREGdc,"}/*!sc*/
+.iPuJRj{color:#666;}/*!sc*/
+data-styled.g60[id="sc-iNqNmV"]{content:"iPuJRj,"}/*!sc*/
+.KUVXc{color:#666;word-break:break-word;}/*!sc*/
+data-styled.g61[id="sc-jeGSXX"]{content:"KUVXc,"}/*!sc*/
+.giWqTo{color:#d41f1c;font-size:0.9em;font-weight:normal;margin-left:20px;line-height:1;}/*!sc*/
+data-styled.g62[id="sc-eJMOVy"]{content:"giWqTo,"}/*!sc*/
+.gVtlDZ{margin:1em 0;}/*!sc*/
+.gVtlDZ a{text-decoration:auto;color:#32329f;}/*!sc*/
+.gVtlDZ a:visited{color:#32329f;}/*!sc*/
+.gVtlDZ a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+data-styled.g70[id="sc-Gqece"]{content:"gVtlDZ,"}/*!sc*/
+.hWeMwQ{margin-top:0;margin-bottom:0.5em;}/*!sc*/
+data-styled.g91[id="sc-eGCbyA"]{content:"hWeMwQ,"}/*!sc*/
+.gUXnfH{border:1px solid #32329f;color:#32329f;font-weight:normal;margin-left:0.5em;padding:4px 8px 4px;display:inline-block;text-decoration:none;cursor:pointer;}/*!sc*/
+data-styled.g92[id="sc-ctaXUJ"]{content:"gUXnfH,"}/*!sc*/
+.hlKxkW::before{content:'|';display:inline-block;opacity:0.5;width:15px;text-align:center;}/*!sc*/
+.hlKxkW:last-child::after{display:none;}/*!sc*/
+data-styled.g93[id="sc-dFJsne"]{content:"hlKxkW,"}/*!sc*/
+.jddSMs{overflow:hidden;}/*!sc*/
+data-styled.g94[id="sc-bsioJn"]{content:"jddSMs,"}/*!sc*/
+.cWZmJq{display:flex;flex-wrap:wrap;margin-left:-15px;}/*!sc*/
+data-styled.g95[id="sc-gIntVs"]{content:"cWZmJq,"}/*!sc*/
+.bwwtyo{width:9ex;display:inline-block;height:13px;line-height:13px;background-color:#333;border-radius:3px;background-repeat:no-repeat;background-position:6px 4px;font-size:7px;font-family:Verdana,sans-serif;color:white;text-transform:uppercase;text-align:center;font-weight:bold;vertical-align:middle;margin-right:6px;margin-top:2px;}/*!sc*/
+.bwwtyo.get{background-color:#2F8132;}/*!sc*/
+.bwwtyo.post{background-color:#186FAF;}/*!sc*/
+.bwwtyo.put{background-color:#95507c;}/*!sc*/
+.bwwtyo.options{background-color:#947014;}/*!sc*/
+.bwwtyo.patch{background-color:#bf581d;}/*!sc*/
+.bwwtyo.delete{background-color:#cc3333;}/*!sc*/
+.bwwtyo.basic{background-color:#707070;}/*!sc*/
+.bwwtyo.link{background-color:#07818F;}/*!sc*/
+.bwwtyo.head{background-color:#A23DAD;}/*!sc*/
+.bwwtyo.hook{background-color:#32329f;}/*!sc*/
+.bwwtyo.schema{background-color:#707070;}/*!sc*/
+data-styled.g99[id="sc-dkIYMQ"]{content:"bwwtyo,"}/*!sc*/
+.YKcaq{margin:0;padding:0;}/*!sc*/
+.YKcaq:first-child{padding-bottom:32px;}/*!sc*/
+.sc-XhViZ .sc-XhViZ{font-size:0.929em;}/*!sc*/
+data-styled.g100[id="sc-XhViZ"]{content:"YKcaq,"}/*!sc*/
+.fhNqYr{list-style:none inside none;overflow:hidden;text-overflow:ellipsis;padding:0;}/*!sc*/
+data-styled.g101[id="sc-ikPBrU"]{content:"fhNqYr,"}/*!sc*/
+.cOUFXf{cursor:pointer;color:#333333;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:0.929em;text-transform:none;background-color:#fafafa;}/*!sc*/
+.cOUFXf:hover{color:#32329f;background-color:#e1e1e1;}/*!sc*/
+.cOUFXf .sc-dQpIV{height:1.5em;width:1.5em;}/*!sc*/
+.cOUFXf .sc-dQpIV polygon{fill:#333333;}/*!sc*/
+.CYQVt{cursor:pointer;color:#333333;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Montserrat,sans-serif;background-color:#fafafa;}/*!sc*/
+.CYQVt:hover{color:#32329f;background-color:#ededed;}/*!sc*/
+.CYQVt .sc-dQpIV{height:1.5em;width:1.5em;}/*!sc*/
+.CYQVt .sc-dQpIV polygon{fill:#333333;}/*!sc*/
+data-styled.g102[id="sc-tYqQR"]{content:"cOUFXf,CYQVt,"}/*!sc*/
+.bkVowu{display:inline-block;vertical-align:middle;width:calc(100% - 38px);overflow:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g103[id="sc-biBryG"]{content:"bkVowu,"}/*!sc*/
+.jrtoRW{font-size:0.8em;margin-top:10px;text-align:center;position:fixed;width:260px;bottom:0;background:#fafafa;}/*!sc*/
+.jrtoRW a,.jrtoRW a:visited,.jrtoRW a:hover{color:#333333!important;padding:5px 0;border-top:1px solid #e1e1e1;text-decoration:none;display:flex;align-items:center;justify-content:center;}/*!sc*/
+.jrtoRW img{width:15px;margin-right:5px;}/*!sc*/
+@media screen and (max-width: 50rem){.jrtoRW{width:100%;}}/*!sc*/
+data-styled.g104[id="sc-eHfQwz"]{content:"jrtoRW,"}/*!sc*/
+.bhuodb{cursor:pointer;position:relative;margin-bottom:5px;}/*!sc*/
+data-styled.g110[id="sc-bQdSiB"]{content:"bhuodb,"}/*!sc*/
+.jzevEV{font-family:Courier,monospace;margin-left:10px;flex:1;overflow-x:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g111[id="sc-fXoxOd"]{content:"jzevEV,"}/*!sc*/
+.jlriCd{outline:0;color:inherit;width:100%;text-align:left;cursor:pointer;padding:10px 30px 10px 20px;border-radius:4px 4px 0 0;background-color:#11171a;display:flex;white-space:nowrap;align-items:center;border:1px solid transparent;border-bottom:0;transition:border-color 0.25s ease;}/*!sc*/
+.jlriCd ..sc-fXoxOd{color:#ffffff;}/*!sc*/
+.jlriCd:focus{box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.45),0 2px 0 rgba(128, 128, 128, 0.25);}/*!sc*/
+data-styled.g112[id="sc-FyfbU"]{content:"jlriCd,"}/*!sc*/
+.coiChI{font-size:0.929em;line-height:20px;background-color:#186FAF;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Montserrat,sans-serif;margin:0;}/*!sc*/
+.gDPfwK{font-size:0.929em;line-height:20px;background-color:#2F8132;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Montserrat,sans-serif;margin:0;}/*!sc*/
+data-styled.g113[id="sc-jXkspL"]{content:"coiChI,gDPfwK,"}/*!sc*/
+.ciRGmD{position:absolute;width:100%;z-index:100;background:#fafafa;color:#263238;box-sizing:border-box;box-shadow:0 0 6px rgba(0, 0, 0, 0.33);overflow:hidden;border-bottom-left-radius:4px;border-bottom-right-radius:4px;transition:all 0.25s ease;visibility:hidden;transform:translateY(-50%) scaleY(0);}/*!sc*/
+data-styled.g114[id="sc-eFtZDC"]{content:"ciRGmD,"}/*!sc*/
+.buTZbL{padding:10px;}/*!sc*/
+data-styled.g115[id="sc-fmlKft"]{content:"buTZbL,"}/*!sc*/
+.uePtT{padding:5px;border:1px solid #ccc;background:#fff;word-break:break-all;color:#32329f;}/*!sc*/
+.uePtT >span{color:#333333;}/*!sc*/
+data-styled.g116[id="sc-ljRaSg"]{content:"uePtT,"}/*!sc*/
+.gpLUhw{text-transform:lowercase;margin-left:0;line-height:1.5em;}/*!sc*/
+data-styled.g117[id="sc-jmhEHb"]{content:"gpLUhw,"}/*!sc*/
+.iePdRD{display:block;border:0;width:100%;text-align:left;padding:10px;border-radius:2px;margin-bottom:4px;line-height:1.5em;cursor:pointer;color:#1d8127;background-color:rgba(29,129,39,0.07);}/*!sc*/
+.iePdRD:focus{outline:auto #1d8127;}/*!sc*/
+data-styled.g119[id="sc-httZfN"]{content:"iePdRD,"}/*!sc*/
+.goojcW{vertical-align:top;}/*!sc*/
+data-styled.g122[id="sc-gVgoeb"]{content:"goojcW,"}/*!sc*/
+.fCsSHf{font-size:1.3em;padding:0.2em 0;margin:3em 0 1.1em;color:#333333;font-weight:normal;}/*!sc*/
+data-styled.g123[id="sc-fWPdKs"]{content:"fCsSHf,"}/*!sc*/
+.fgfjUV{margin-bottom:30px;}/*!sc*/
+data-styled.g128[id="sc-eWVLZl"]{content:"fgfjUV,"}/*!sc*/
+.iEVneI{user-select:none;width:20px;height:20px;align-self:center;display:flex;flex-direction:column;color:#32329f;}/*!sc*/
+data-styled.g129[id="sc-iGctyi"]{content:"iEVneI,"}/*!sc*/
+.gXSQkB{width:260px;background-color:#fafafa;overflow:hidden;display:flex;flex-direction:column;backface-visibility:hidden;height:100vh;position:sticky;position:-webkit-sticky;top:0;}/*!sc*/
+@media screen and (max-width: 50rem){.gXSQkB{position:fixed;z-index:20;width:100%;background:#fafafa;display:none;}}/*!sc*/
+@media print{.gXSQkB{display:none;}}/*!sc*/
+data-styled.g130[id="sc-irlPvL"]{content:"gXSQkB,"}/*!sc*/
+.bEOmaQ{outline:none;user-select:none;background-color:#f2f2f2;color:#32329f;display:none;cursor:pointer;position:fixed;right:20px;z-index:100;border-radius:50%;box-shadow:0 0 20px rgba(0, 0, 0, 0.3);bottom:44px;width:60px;height:60px;padding:0 20px;}/*!sc*/
+@media screen and (max-width: 50rem){.bEOmaQ{display:flex;}}/*!sc*/
+.bEOmaQ svg{color:#0065FB;}/*!sc*/
+@media print{.bEOmaQ{display:none;}}/*!sc*/
+data-styled.g131[id="sc-eWvOCH"]{content:"bEOmaQ,"}/*!sc*/
+.bwTiCm{font-family:Roboto,sans-serif;font-size:14px;font-weight:400;line-height:1.5em;color:#333333;display:flex;position:relative;text-align:left;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;text-rendering:optimizeSpeed!important;tap-highlight-color:rgba(0, 0, 0, 0);text-size-adjust:100%;}/*!sc*/
+.bwTiCm *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(255, 255, 255, 0);}/*!sc*/
+data-styled.g132[id="sc-kUbfpu"]{content:"bwTiCm,"}/*!sc*/
+.dPIjnf{z-index:1;position:relative;overflow:hidden;width:calc(100% - 260px);contain:layout;}/*!sc*/
+@media print,screen and (max-width: 50rem){.dPIjnf{width:100%;}}/*!sc*/
+data-styled.g133[id="sc-dwcvcB"]{content:"dPIjnf,"}/*!sc*/
+.gfiMgB{background:#263238;position:absolute;top:0;bottom:0;right:0;width:calc((100% - 260px) * 0.4);}/*!sc*/
+@media print,screen and (max-width: 75rem){.gfiMgB{display:none;}}/*!sc*/
+data-styled.g134[id="sc-jtHLPo"]{content:"gfiMgB,"}/*!sc*/
+.hwhlAl{padding:5px 0;}/*!sc*/
+data-styled.g135[id="sc-eltaTX"]{content:"hwhlAl,"}/*!sc*/
+.eWIXbA{width:calc(100% - 40px);box-sizing:border-box;margin:0 20px;padding:5px 10px 5px 20px;border:0;border-bottom:1px solid #e1e1e1;font-family:Roboto,sans-serif;font-weight:bold;font-size:13px;color:#333333;background-color:transparent;outline:none;}/*!sc*/
+data-styled.g136[id="sc-kiYrGK"]{content:"eWIXbA,"}/*!sc*/
+.lcoFQc{position:absolute;left:20px;height:1.8em;width:0.9em;}/*!sc*/
+.lcoFQc path{fill:#333333;}/*!sc*/
+data-styled.g137[id="sc-cKZHtR"]{content:"lcoFQc,"}/*!sc*/
+</style>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+</head>
+
+<body>
+  
+      <div id="redoc"><div class="sc-kUbfpu bwTiCm redoc-wrap"><div class="sc-irlPvL gXSQkB menu-content" style="top:0px;height:calc(100vh - 0px)"><div role="search" class="sc-eltaTX hwhlAl"><svg class="sc-cKZHtR lcoFQc search-icon" version="1.1" viewBox="0 0 1000 1000" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px"><path d="M968.2,849.4L667.3,549c83.9-136.5,66.7-317.4-51.7-435.6C477.1-25,252.5-25,113.9,113.4c-138.5,138.3-138.5,362.6,0,501C219.2,730.1,413.2,743,547.6,666.5l301.9,301.4c43.6,43.6,76.9,14.9,104.2-12.4C981,928.3,1011.8,893,968.2,849.4z M524.5,522c-88.9,88.7-233,88.7-321.8,0c-88.9-88.7-88.9-232.6,0-321.3c88.9-88.7,233-88.7,321.8,0C613.4,289.4,613.4,433.3,524.5,522z"></path></svg><input placeholder="Search..." aria-label="Search" type="text" class="sc-kiYrGK eWIXbA search-input" value=""/></div><div class="sc-kLgoAE eJckYb scrollbar-container undefined"><ul role="menu" class="sc-XhViZ YKcaq"><li tabindex="0" depth="1" data-item-id="section/API-para-laravel-boleto" role="menuitem" class="sc-ikPBrU fhNqYr"><label class="sc-tYqQR cOUFXf -depth1"><span width="calc(100% - 38px)" title="API para laravel-boleto" class="sc-biBryG bkVowu">API para laravel-boleto</span></label></li><li tabindex="0" depth="1" data-item-id="section/Bancos-Implementados" role="menuitem" class="sc-ikPBrU fhNqYr"><label class="sc-tYqQR cOUFXf -depth1"><span width="calc(100% - 38px)" title="Bancos Implementados" class="sc-biBryG bkVowu">Bancos Implementados</span></label></li><li tabindex="0" depth="2" data-item-id="operation/api" role="menuitem" class="sc-ikPBrU fhNqYr"><label class="sc-tYqQR CYQVt -depth2"><span type="post" class="sc-dkIYMQ bwwtyo operation-type post">post</span><span tabindex="0" width="calc(100% - 38px)" class="sc-biBryG bkVowu">POST /api</span></label></li><li tabindex="0" depth="2" data-item-id="operation/file" role="menuitem" class="sc-ikPBrU fhNqYr"><label class="sc-tYqQR CYQVt -depth2"><span type="get" class="sc-dkIYMQ bwwtyo operation-type get">get</span><span tabindex="0" width="calc(100% - 38px)" class="sc-biBryG bkVowu">GET /file</span></label></li></ul><div class="sc-eHfQwz jrtoRW"><a target="_blank" rel="noopener noreferrer" href="https://redocly.com/redoc/">API docs by Redocly</a></div></div></div><div class="sc-eWvOCH bEOmaQ"><div class="sc-iGctyi iEVneI"><svg class="" style="transform:translate(2px, -4px) rotate(180deg);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg><svg class="" style="transform:translate(2px, 4px);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg></div></div><div class="sc-dwcvcB dPIjnf api-content"><div class="sc-eCstZk kxmVZO"><div class="sc-iBPTVF keMybc"><div class="sc-hKgKIp gvoNGN api-info"><h1 class="sc-fubDmA sc-eGCbyA djltfY hWeMwQ">api-laravel-boleto<!-- --> <span>(<!-- -->v1<!-- -->)</span></h1><p>Download OpenAPI specification<!-- -->:<a download="openapi.json" target="_blank" class="sc-ctaXUJ gUXnfH">Download</a></p><div class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"><div class="sc-bsioJn jddSMs"><div class="sc-gIntVs cWZmJq"> <!-- --> <span class="sc-dFJsne hlKxkW">License:<!-- --> <a href="https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE">MIT</a></span> </div></div></div><div data-role="redoc-summary" html="" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"></div><div data-role="redoc-description" html="" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"></div><div class="sc-Gqece gVtlDZ"><a href="https://github.com/trezzuri/api-laravel-boleto">Para maiores informações, consulte o projeto no Github</a></div></div></div></div><div id="section/API-para-laravel-boleto" data-section-id="section/API-para-laravel-boleto" class="sc-eCstZk kxmVZO"><div class="sc-iBPTVF keMybc"><div class="sc-hKgKIp gvoNGN"><h2 class="sc-pGaPU biKwui"><a class="sc-crrtmM jGBpue" href="#section/API-para-laravel-boleto" aria-label="section/API-para-laravel-boleto"></a>API para laravel-boleto</h2></div></div><div class="sc-hKgKIp jIkZBx"><div class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG redoc-markdown " html="&lt;p&gt;API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package 
+&lt;a href=&quot;https://github.com/eduardokum/laravel-boleto&quot;&gt;laravel-boleto&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Envie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos.&lt;/p&gt;
+&lt;p&gt;A API irá gerar:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vários arquivos PDF, um para cada boleto informado no array &amp;quot;boletos&amp;quot; do POST&lt;/li&gt;
+&lt;li&gt;Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST&lt;/li&gt;
+&lt;/ul&gt;
+"><p>API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package 
+<a href="https://github.com/eduardokum/laravel-boleto">laravel-boleto</a>.</p>
+<p>Envie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos.</p>
+<p>A API irá gerar:</p>
+<ul>
+<li>Vários arquivos PDF, um para cada boleto informado no array &quot;boletos&quot; do POST</li>
+<li>Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST</li>
+</ul>
+</div></div></div><div id="section/Bancos-Implementados" data-section-id="section/Bancos-Implementados" class="sc-eCstZk kxmVZO"><div class="sc-iBPTVF keMybc"><div class="sc-hKgKIp gvoNGN"><h2 class="sc-pGaPU biKwui"><a class="sc-crrtmM jGBpue" href="#section/Bancos-Implementados" aria-label="section/Bancos-Implementados"></a>Bancos Implementados</h2></div></div><div class="sc-hKgKIp jIkZBx"><div class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG redoc-markdown " html="&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Código COMPE&lt;/th&gt;
+&lt;th align=&quot;center&quot;&gt;CNAB 400&lt;/th&gt;
+&lt;th align=&quot;center&quot;&gt;CNAB 240&lt;/th&gt;
+&lt;th&gt;Carteiras Disponíveis&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;001 - Banco do Brasil&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;11, 12, 15, 17, 18, 31, 51&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;004 - Bnb&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;21, 31, 41&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;033 - Santander&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;101, 201&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;041 - Banrisul&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;1 a 8, B a K, M, N, P a U, X&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;077 - Inter&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;112&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;104 - CEF&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;RG&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;136 - Unicred&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;21&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;224 - Fibra&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;237 - Bradesco&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;02, 04, 09, 21, 26&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;341 - Itau&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;112, 115, 188, 109, 121, 180, 110, 111&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;399 - HSBC&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;CSB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;435 - Delcred&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;112, 121&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;643 - Pine&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;712 - Ourinvest&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;748 - Sicredi&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;1, 2, 3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;756 - Bancoob&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td align=&quot;center&quot;&gt;Sim&lt;/td&gt;
+&lt;td&gt;1, 3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
+para cada banco podem ser encontrados no package 
+&lt;a href=&quot;https://github.com/eduardokum/laravel-boleto&quot;&gt;laravel-boleto&lt;/a&gt;.&lt;/p&gt;
+"><table>
+<thead>
+<tr>
+<th>Código COMPE</th>
+<th align="center">CNAB 400</th>
+<th align="center">CNAB 240</th>
+<th>Carteiras Disponíveis</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001 - Banco do Brasil</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>11, 12, 15, 17, 18, 31, 51</td>
+</tr>
+<tr>
+<td>004 - Bnb</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>21, 31, 41</td>
+</tr>
+<tr>
+<td>033 - Santander</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>101, 201</td>
+</tr>
+<tr>
+<td>041 - Banrisul</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>1 a 8, B a K, M, N, P a U, X</td>
+</tr>
+<tr>
+<td>077 - Inter</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>112</td>
+</tr>
+<tr>
+<td>104 - CEF</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>RG</td>
+</tr>
+<tr>
+<td>136 - Unicred</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>21</td>
+</tr>
+<tr>
+<td>224 - Fibra</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>0</td>
+</tr>
+<tr>
+<td>237 - Bradesco</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>02, 04, 09, 21, 26</td>
+</tr>
+<tr>
+<td>341 - Itau</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>112, 115, 188, 109, 121, 180, 110, 111</td>
+</tr>
+<tr>
+<td>399 - HSBC</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>CSB</td>
+</tr>
+<tr>
+<td>435 - Delcred</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>112, 121</td>
+</tr>
+<tr>
+<td>643 - Pine</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>0</td>
+</tr>
+<tr>
+<td>712 - Ourinvest</td>
+<td align="center">Sim</td>
+<td align="center">-</td>
+<td>0</td>
+</tr>
+<tr>
+<td>748 - Sicredi</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>1, 2, 3</td>
+</tr>
+<tr>
+<td>756 - Bancoob</td>
+<td align="center">Sim</td>
+<td align="center">Sim</td>
+<td>1, 3</td>
+</tr>
+</tbody></table>
+<p>Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
+para cada banco podem ser encontrados no package 
+<a href="https://github.com/eduardokum/laravel-boleto">laravel-boleto</a>.</p>
+</div></div></div><div id="operation/api" data-section-id="operation/api" class="sc-eCstZk bCpIRB"><div data-section-id="operation/api" id="operation/api" class="sc-iBPTVF keMybc"><div class="sc-hKgKIp gvoNGN"><h2 class="sc-pGaPU biKwui"><a class="sc-crrtmM jGBpue" href="#operation/api" aria-label="operation/api"></a>POST /api<!-- --> </h2><div class="sc-eWVLZl fgfjUV"><div html="&lt;p&gt;Endpoint para a geração de boletos e arquivo CNAB&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"><p>Endpoint para a geração de boletos e arquivo CNAB</p>
+</div></div><h5 class="sc-iqHXzD bRzaSI">Request Body schema: <span class="sc-gWHiUp duVBEA">application/json</span><div class="sc-gTgyBf sc-eJMOVy sc-jmhEHb ihUpGF giWqTo gpLUhw">required</div></h5><div html="" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"></div><table class="sc-hHftZz buUaAP"><tbody><tr class=""><td kind="field" title="banco" class="sc-hBEZvw sc-fFubCH sc-jgHCeW gPUvwc gXIfsF hEcUkb"><span class="sc-idOjMB jwsifT"></span><button aria-label="expand banco"><span class="property-name">banco</span><svg class="sc-dQpIV cKHJqV" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div class="sc-gTgyBf sc-eJMOVy ihUpGF giWqTo">required</div></td><td class="sc-bkzXAi kMAhqG"><div><div><span class="sc-gTgyBf sc-laRQQM ihUpGF cREGdc"></span><span class="sc-gTgyBf sc-iNqNmV ihUpGF iPuJRj">object</span><span class="sc-gTgyBf sc-jeGSXX ihUpGF KUVXc"> (<!-- -->Banco<!-- -->) </span></div> <div><div html="&lt;p&gt;Dados do banco emissor e demais parâmetros para a geração dos boletos&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"><p>Dados do banco emissor e demais parâmetros para a geração dos boletos</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="beneficiario" class="sc-hBEZvw sc-fFubCH sc-jgHCeW gPUvwc gXIfsF hEcUkb"><span class="sc-idOjMB jwsifT"></span><button aria-label="expand beneficiario"><span class="property-name">beneficiario</span><svg class="sc-dQpIV cKHJqV" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div class="sc-gTgyBf sc-eJMOVy ihUpGF giWqTo">required</div></td><td class="sc-bkzXAi kMAhqG"><div><div><span class="sc-gTgyBf sc-laRQQM ihUpGF cREGdc"></span><span class="sc-gTgyBf sc-iNqNmV ihUpGF iPuJRj">object</span><span class="sc-gTgyBf sc-jeGSXX ihUpGF KUVXc"> (<!-- -->Beneficiario<!-- -->) </span></div> <div><div html="&lt;p&gt;Dados do beneficiário&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"><p>Dados do beneficiário</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="cnab" class="sc-hBEZvw sc-fFubCH sc-jgHCeW gPUvwc gXIfsF hEcUkb"><span class="sc-idOjMB jwsifT"></span><button aria-label="expand cnab"><span class="property-name">cnab</span><svg class="sc-dQpIV cKHJqV" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div class="sc-gTgyBf sc-eJMOVy ihUpGF giWqTo">required</div></td><td class="sc-bkzXAi kMAhqG"><div><div><span class="sc-gTgyBf sc-laRQQM ihUpGF cREGdc"></span><span class="sc-gTgyBf sc-iNqNmV ihUpGF iPuJRj">object</span><span class="sc-gTgyBf sc-jeGSXX ihUpGF KUVXc"> (<!-- -->Cnab<!-- -->) </span></div> <div><div html="&lt;p&gt;Dados do arquivo CNAB&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"><p>Dados do arquivo CNAB</p>
+</div></div></div></td></tr><tr class="last "><td kind="field" title="boletos" class="sc-hBEZvw sc-fFubCH sc-jgHCeW gPUvwc gXIfsF hEcUkb"><span class="sc-idOjMB jwsifT"></span><button aria-label="expand boletos"><span class="property-name">boletos</span><svg class="sc-dQpIV cKHJqV" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div class="sc-gTgyBf sc-eJMOVy ihUpGF giWqTo">required</div></td><td class="sc-bkzXAi kMAhqG"><div><div><span class="sc-gTgyBf sc-laRQQM ihUpGF cREGdc">Array of </span><span class="sc-gTgyBf sc-iNqNmV ihUpGF iPuJRj">objects</span><span class="sc-gTgyBf sc-jeGSXX ihUpGF KUVXc"> (<!-- -->Boleto<!-- -->) </span></div> <div><div html="&lt;p&gt;Dados dos boletos a serem gerados&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"><p>Dados dos boletos a serem gerados</p>
+</div></div></div></td></tr></tbody></table><div><h3 class="sc-fWPdKs fCsSHf">Responses</h3><div><button class="sc-httZfN iePdRD"><svg class="sc-dQpIV iHKCKT" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-gVgoeb goojcW">200<!-- --> </strong><div html="&lt;p&gt;Boletos gerados com sucesso&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG sc-citwID bzkUsW"><p>Boletos gerados com sucesso</p>
+</div></button></div></div></div><div class="sc-jSguLX sc-gKsecS QymcT bZqtR"><div class="sc-bQdSiB bhuodb"><button class="sc-FyfbU jlriCd"><span type="post" class="sc-jXkspL coiChI http-verb post">post</span><span class="sc-fXoxOd jzevEV">/api</span><svg class="sc-dQpIV hHbBnT" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-eFtZDC ciRGmD"><div class="sc-fmlKft buTZbL"><div html="" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"></div><div tabindex="0" role="button"><div class="sc-ljRaSg uePtT"><span>http://localhost:8900</span>/api</div></div></div></div></div><div><h3 class="sc-kEjbdu jmifsN"> <!-- -->Request samples<!-- --> </h3><div class="sc-cxFKTC jVRsAZ" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="react-tabs__tab react-tabs__tab--selected" role="tab" id="react-tabs-0" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-1" tabindex="0" data-rttab="true">Payload</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-1" aria-labelledby="react-tabs-0"><div><div class="sc-cOaiZO eDzWuJ"><span class="sc-bBrOHt etjuEr">Content type</span><div class="sc-dOSSlk bAzVww">application/json</div></div><div class="sc-hTZhMB kTaCsY"><div class="sc-cTkyaV gLzJQv"><div class="sc-giInvV bIDavi"><button><div class="sc-jcVcfa iVrxDL">Copy</div></button><button> Expand all </button><button> Collapse all </button></div><div class="sc-iJuWdM gpkGbA sc-jNMdxs jXmkAn"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"banco"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"codigoCompe"</span>: <span class="token string">&quot;001&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"agencia"</span>: <span class="token string">&quot;0011&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"conta"</span>: <span class="token string">&quot;22222&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"carteira"</span>: <span class="token string">&quot;11&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"convenio"</span>: <span class="token string">&quot;123123&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"codigoCliente"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"operacao"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"posto"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"range"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"byte"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"modalidadeCarteira"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"variacaoCarteira"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"diasBaixaAutomatica"</span>: <span class="token number">0</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"diasProtesto"</span>: <span class="token number">0</span></div></li></ul><span class="token punctuation">}</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"beneficiario"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"nome"</span>: <span class="token string">&quot;ACME&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"endereco"</span>: <span class="token string">&quot;Rua um, 123&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"cep"</span>: <span class="token string">&quot;99999-999&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"uf"</span>: <span class="token string">&quot;UF&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"cidade"</span>: <span class="token string">&quot;CIDADE&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"documento"</span>: <span class="token string">&quot;99.999.999/9999-99&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"logo"</span>: <span class="token string">&quot;&quot;</span></div></li></ul><span class="token punctuation">}</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"cnab"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"layout"</span>: <span class="token string">&quot;400&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"idremessa"</span>: <span class="token number">1</span></div></li></ul><span class="token punctuation">}</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"boletos"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">[</span><span class="ellipsis"></span><ul class="array collapsible"><li><div class="hoverable collapsed"><button class="collapser" aria-label="expand"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"pagador"</span>: <button class="collapser" aria-label="expand"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"nome"</span>: <span class="token string">&quot;Cliente&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"endereco"</span>: <span class="token string">&quot;Rua um, 123&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"bairro"</span>: <span class="token string">&quot;Bairro&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"cep"</span>: <span class="token string">&quot;99999-999&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"uf"</span>: <span class="token string">&quot;UF&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"cidade"</span>: <span class="token string">&quot;CIDADE&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"documento"</span>: <span class="token string">&quot;999.999.999-99&quot;</span></div></li></ul><span class="token punctuation">}</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"numero"</span>: <span class="token number">1</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"numeroDocumento"</span>: <span class="token string">&quot;NF1010-1&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"dataVencimento"</span>: <span class="token string">&quot;2023-02-15&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"valor"</span>: <span class="token number">12345.67</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"multa"</span>: <span class="token number">0</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"juros"</span>: <span class="token number">0</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"aceite"</span>: <span class="token number">0</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"especieDoc"</span>: <span class="token string">&quot;DM&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"descricaoDemonstrativo"</span>: <span class="token string">&quot;Descrição do demonstrativo de cobrança&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"instrucoes"</span>: <span class="token string">&quot;Descrição das instruções de cobrança&quot;</span></div></li></ul><span class="token punctuation">}</span></div></li></ul><span class="token punctuation">]</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div><div><h3 class="sc-kEjbdu jmifsN"> <!-- -->Response samples<!-- --> </h3><div class="sc-cxFKTC jVRsAZ" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="react-tabs-2" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-3" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-3" aria-labelledby="react-tabs-2"><div><div class="sc-cOaiZO eDzWuJ"><span class="sc-bBrOHt etjuEr">Content type</span><div class="sc-dOSSlk bAzVww">application/json</div></div><div class="sc-hTZhMB kTaCsY"><div class="sc-cTkyaV gLzJQv"><div class="sc-giInvV bIDavi"><button><div class="sc-jcVcfa iVrxDL">Copy</div></button><button> Expand all </button><button> Collapse all </button></div><div class="sc-iJuWdM gpkGbA sc-jNMdxs jXmkAn"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"status"</span>: <span class="token number">0</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"mensagem"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"remessa"</span>: <span class="token string">&quot;001655613e9d6537.rem&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"boletos"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">[</span><span class="ellipsis"></span><ul class="array collapsible"><li><div class="hoverable collapsed"><button class="collapser" aria-label="expand"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable collapsed"><span class="property token string">"linha_digitavel"</span>: <span class="token string">&quot;00191.23124 30000.100112 00022.222111 2 92620001234567&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"codigo_barras"</span>: <span class="token string">&quot;00192926200012345671231230000100110002222211&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"numero"</span>: <span class="token number">1</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"numeroDocumento"</span>: <span class="token string">&quot;NF1010-1&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"nosso_numero"</span>: <span class="token string">&quot;12312300001&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"nosso_numero_boleto"</span>: <span class="token string">&quot;12312300001-2&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable collapsed"><span class="property token string">"pdf"</span>: <span class="token string">&quot;001655613e9d5247.pdf&quot;</span></div></li></ul><span class="token punctuation">}</span></div></li></ul><span class="token punctuation">]</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div></div></div></div><div id="operation/file" data-section-id="operation/file" class="sc-eCstZk bCpIRB"><div data-section-id="operation/file" id="operation/file" class="sc-iBPTVF keMybc"><div class="sc-hKgKIp gvoNGN"><h2 class="sc-pGaPU biKwui"><a class="sc-crrtmM jGBpue" href="#operation/file" aria-label="operation/file"></a>GET /file<!-- --> </h2><div class="sc-eWVLZl fgfjUV"><div html="&lt;p&gt;Endpoint para download de arquivos PDF ou REM gerados pela API&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG"><p>Endpoint para download de arquivos PDF ou REM gerados pela API</p>
+</div></div><div><h3 class="sc-fWPdKs fCsSHf">Responses</h3><div><button class="sc-httZfN iePdRD"><svg class="sc-dQpIV iHKCKT" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-gVgoeb goojcW">200<!-- --> </strong><div html="&lt;p&gt;Download realizado&lt;/p&gt;
+" class="sc-iJuWdM sc-cBNeRQ gpkGbA casAkG sc-citwID bzkUsW"><p>Download realizado</p>
+</div></button></div></div></div><div class="sc-jSguLX sc-gKsecS QymcT bZqtR"><div class="sc-bQdSiB bhuodb"><button class="sc-FyfbU jlriCd"><span type="get" class="sc-jXkspL gDPfwK http-verb get">get</span><span class="sc-fXoxOd jzevEV">/file/{filename}</span><svg class="sc-dQpIV hHbBnT" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-eFtZDC ciRGmD"><div class="sc-fmlKft buTZbL"><div html="" class="sc-iJuWdM sc-cBNeRQ gpkGbA dujygE"></div><div tabindex="0" role="button"><div class="sc-ljRaSg uePtT"><span>http://localhost:8900</span>/file/{filename}</div></div></div></div></div></div></div></div></div><div class="sc-jtHLPo gfiMgB"></div></div></div>
+      <script>
+      const __redoc_state = {"menu":{"activeItemIdx":-1},"spec":{"data":{"openapi":"3.0.0","servers":[{"url":"http://localhost:8900"}],"info":{"title":"api-laravel-boleto","description":"## API para laravel-boleto\n\nAPI em container docker para geração de boletos e arquivos CNAB, utilizando como base o package \n[laravel-boleto](https://github.com/eduardokum/laravel-boleto).\n\nEnvie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos.\n\nA API irá gerar:\n- Vários arquivos PDF, um para cada boleto informado no array \"boletos\" do POST\n- Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST\n\n## Bancos Implementados\n\n| Código COMPE | CNAB 400 | CNAB 240 | Carteiras Disponíveis |\n| ------------ | :------: | :------: | --------------------- |\n| 001 - Banco do Brasil | Sim | Sim | 11, 12, 15, 17, 18, 31, 51 |\n| 004 - Bnb | Sim | - | 21, 31, 41 |\n| 033 - Santander | Sim | Sim | 101, 201 |\n| 041 - Banrisul | Sim | Sim | 1 a 8, B a K, M, N, P a U, X |\n| 077 - Inter | Sim |  - | 112 |\n| 104 - CEF | Sim | Sim | RG |\n| 136 - Unicred | Sim |  - | 21 |\n| 224 - Fibra | Sim |  - | 0 |\n| 237 - Bradesco | Sim | Sim | 02, 04, 09, 21, 26 |\n| 341 - Itau | Sim | Sim | 112, 115, 188, 109, 121, 180, 110, 111 |\n| 399 - HSBC | Sim |  - | CSB |\n| 435 - Delcred | Sim |  - | 112, 121 |\n| 643 - Pine | Sim |  - | 0 |\n| 712 - Ourinvest | Sim |  - | 0 |\n| 748 - Sicredi | Sim | Sim | 1, 2, 3 |\n| 756 - Bancoob | Sim | Sim | 1, 3 |\n\nMais detalhes sobre os bancos implementados e sobre os campos disponíveis \npara cada banco podem ser encontrados no package \n[laravel-boleto](https://github.com/eduardokum/laravel-boleto).","version":"v1","license":{"name":"MIT","url":"https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE"}},"paths":{"/api":{"post":{"operationId":"api","summary":"POST /api","description":"Endpoint para a geração de boletos e arquivo CNAB","requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Request"}}}},"responses":{"200":{"description":"Boletos gerados com sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Response"}}}}}}},"/file/{filename}":{"get":{"operationId":"file","summary":"GET /file","description":"Endpoint para download de arquivos PDF ou REM gerados pela API","responses":{"200":{"description":"Download realizado","content":{"application/octet-stream":{"schema":{"type":"string","format":"binary"}}}}}}}},"components":{"schemas":{"Request":{"description":"Estrutura da request a ser enviada para a API","type":"object","required":["banco","beneficiario","cnab","boletos"],"properties":{"banco":{"$ref":"#/components/schemas/Banco"},"beneficiario":{"$ref":"#/components/schemas/Beneficiario"},"cnab":{"$ref":"#/components/schemas/Cnab"},"boletos":{"type":"array","description":"Dados dos boletos a serem gerados","items":{"$ref":"#/components/schemas/Boleto"}}}},"Response":{"description":"Estrutura da response retornada pela API","type":"object","properties":{"status":{"type":"integer","example":0,"description":"Status do processamento. \nSe zero, sucesso; diferente de zero, ver campo mensagem."},"mensagem":{"type":"string","example":"","description":"Mensagem de erro ocorrida durante o processamento"},"remessa":{"type":"string","example":"001655613e9d6537.rem","description":"Nome do arquivo da remessa, a ser usado pelo endpoint /file para download"},"boletos":{"type":"array","description":"Dados dos boletos criados pela API","items":{"$ref":"#/components/schemas/BoletoResponse"}}}},"Beneficiario":{"description":"Dados do beneficiário","type":"object","required":["nome","endereco","cep","uf","cidade","documento"],"properties":{"nome":{"description":"Nome ou razão social do beneficiário","type":"string","example":"ACME"},"endereco":{"description":"Endereço do beneficiário","type":"string","example":"Rua um, 123"},"cep":{"description":"CEP do beneficiário","type":"string","example":"99999-999"},"uf":{"description":"UF do beneficiário","type":"string","example":"UF"},"cidade":{"description":"Cidade do beneficiário","type":"string","example":"CIDADE"},"documento":{"description":"CNPJ ou CPF do beneficiário","type":"string","example":"99.999.999/9999-99"},"logo":{"description":"URL para a imagem do logotipo do beneficiário, em formato png ou jpg,\nque será usada na geração do PDF do boleto.\nCaso não seja preenchido, será usado o logo do banco emissor.","type":"string","example":""}}},"Pagador":{"description":"Dados do pagador","type":"object","required":["nome","endereco","cep","uf","cidade","documento"],"properties":{"nome":{"description":"Nome do pagador","type":"string","example":"Cliente"},"endereco":{"description":"Endereço do pagador","type":"string","example":"Rua um, 123"},"bairro":{"description":"Bairro do pagador","type":"string","example":"Bairro"},"cep":{"description":"CEP do pagador","type":"string","example":"99999-999"},"uf":{"description":"UF do pagador","type":"string","example":"UF"},"cidade":{"description":"Cidade do pagador","type":"string","example":"CIDADE"},"documento":{"description":"CNPJ ou CPF do pagador","type":"string","example":"999.999.999-99"}}},"Banco":{"description":"Dados do banco emissor e demais parâmetros para a geração dos boletos","type":"object","required":["codigoCompe","agencia","conta","carteira"],"properties":{"codigoCompe":{"description":"Código COMPE do banco com 3 dígitos","type":"string","example":"001"},"agencia":{"description":"Número da agência bancária do beneficiário","type":"string","example":"0011"},"conta":{"description":"Conta bancária do beneficiário SEM o dígito verificador","type":"string","example":"22222"},"carteira":{"description":"Carteira de cobrança. \nVide carteiras disponíveis para cada banco no descritivo da API.","type":"string","example":"11"},"convenio":{"description":"Código do convênio do banco. Obrigatório apenas para os bancos:\n001 - Banco do Brasil,\n756 - Bancoob","type":"string","example":"123123"},"codigoCliente":{"description":"Código do cliente no banco. Obrigatório apenas para os bancos:\n033 - Santander,\n104 - CEF,\n224 - Fibra,\n643 - Pine","type":"string","example":""},"operacao":{"description":"Obrigatório apenas para banco 077 - Inter. \nConsulte seu número da operação no internet banking.","type":"string","example":""},"posto":{"description":"Obrigatório apenas para banco 748 - Sicredi. \nPosto da cooperativa de crédito/agência beneficiária.","type":"string","example":""},"range":{"description":"Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.\nFaixa de valor a ser usada para compor o \"Nosso Número\", \nconsulte o banco para mais informações.","type":"string","example":""},"byte":{"description":"Obrigatório apenas para banco 748 - Sicredi. \nInformar valor de 2 a 9, significa que o \"Nosso Número\" foi gerado pelo beneficiário.","type":"string","example":""},"modalidadeCarteira":{"description":"Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.\nModalidade de cobrança com bancos correspondentes, \nconsulte o banco para mais informações.","type":"string","example":""},"variacaoCarteira":{"description":"Obrigatório apenas para banco 001 - Banco do Brasil e CNAB240.\nInformar o número da variação da carteira de cobrança.","type":"string","example":""},"diasBaixaAutomatica":{"description":"Dias para realização de baixa automática do boleto em caso de não pagamento.\nNem todos os bancos dispõem desta funcionalidade, consulte o banco.","type":"integer","example":0},"diasProtesto":{"description":"Dias para realização de protesto do boleto em caso de não pagamento.\nNem todos os bancos dispõem desta funcionalidade, consulte o banco.","type":"integer","example":0}}},"Cnab":{"description":"Dados do arquivo CNAB","type":"object","required":["layout","idremessa"],"properties":{"layout":{"description":"Layout do arquivo CNAB a ser gerado.\nValores válidos: \"240\" ou \"400\"","type":"string","example":"400"},"idremessa":{"description":"Sequencial da remessa. \nEste é um número sequencial de arquivos enviados ao banco, \ndevendo ser iniciado em 1 caso seja o primeiro arquivo CNAB enviado.\nIncrementar este campo em 1 para cada novo arquivo enviado ao banco.","type":"integer","example":1}}},"Boleto":{"description":"Dados do boleto a ser gerado","type":"object","required":["pagador","numero","numeroDocumento","dataVencimento","valor","multa","juros","aceite","especieDoc"],"properties":{"pagador":{"description":"Dados do pagador","$ref":"#/components/schemas/Pagador"},"numero":{"type":"integer","example":1,"description":"Número do boleto, que irá compor o \"Nosso Número\""},"numeroDocumento":{"type":"string","example":"NF1010-1","description":"Número do documento. Um código que identifica a cobrança por parte do beneficiário"},"dataVencimento":{"type":"string","format":"date","example":"2023-02-15","description":"Data de vencimento do boleto no formato AAAA-MM-DD"},"valor":{"type":"number","example":12345.67,"description":"Valor do boleto"},"multa":{"type":"number","example":0,"description":"Percentual da multa, aplicada em caso de atraso no pagamento"},"juros":{"type":"number","example":0,"description":"Percentual dos juros de mora ao mês, aplicados em caso de atraso no pagamento"},"aceite":{"type":"integer","example":0,"description":"Identificador de título aceito ou não aceito previamente pelo pagador.\nValores possíveis: 0 - Não aceito, 1 - Aceito. "},"especieDoc":{"type":"string","example":"DM","description":"Espécie do documento que originou a cobrança:\n\"DM\": Mercadorias,\n\"DS\": Serviços"},"descricaoDemonstrativo":{"type":"string","example":"Descrição do demonstrativo de cobrança","description":"Descrição do demonstrativo da cobrança"},"instrucoes":{"type":"string","example":"Descrição das instruções de cobrança","description":"Descrição das instruções de cobrança, que aparecem no corpo do boleto"}}},"BoletoResponse":{"description":"Dados do boleto gerado","type":"object","properties":{"linha_digitavel":{"type":"string","example":"00191.23124 30000.100112 00022.222111 2 92620001234567","description":"Linha digitável do boleto"},"codigo_barras":{"type":"string","example":"00192926200012345671231230000100110002222211","description":"Código de barras do boleto"},"numero":{"type":"integer","example":1,"description":"Número do boleto, que compõe o \"Nosso Número\""},"numeroDocumento":{"type":"string","example":"NF1010-1","description":"Número do documento. Um código que identifica a cobrança por parte do beneficiário"},"nosso_numero":{"type":"string","example":"12312300001","description":"Campo \"Nosso Número\" do boleto"},"nosso_numero_boleto":{"type":"string","example":"12312300001-2","description":"Campo \"Nosso Número\" do boleto com o dígito verificador"},"pdf":{"type":"string","example":"001655613e9d5247.pdf","description":"Nome do arquivo PDF do boleto, a ser usado pelo endpoint /file para download"}}}}},"externalDocs":{"description":"Para maiores informações, consulte o projeto no Github","url":"https://github.com/trezzuri/api-laravel-boleto"}}},"searchIndex":{"store":["section/API-para-laravel-boleto","section/Bancos-Implementados","operation/api","operation/file"],"index":{"version":"2.3.9","fields":["title","description"],"fieldVectors":[["title/0",[0,0.072,1,0.072,2,1]],["description/0",[0,0.144,1,0.153,3,1.327,4,1.327,5,1.327,6,1.018,7,0.589,8,1.272,9,0.393,10,0.589,11,0.524,12,1.327,13,1.327,14,1.327,15,1.768,16,0.764,17,0.764,18,1.327,19,2.121,20,1.145,21,0.393,22,1.327,23,1.327,24,1.327,25,1.768,26,1.145,27,1.768,28,1.327,29,1.327,30,1.327,31,1.018,32,1.327,33,0.764,34,0.764,35,1.768,36,1.327,37,1.327,38,1.327]],["title/1",[39,0.693,40,0.693]],["description/1",[1,0.048,9,0.197,11,0.315,16,0.383,17,0.383,26,0.613,31,1.487,34,0.383,39,0.765,40,0.383,41,0.666,42,0.666,43,0.666,44,0.666,45,0.666,46,1.064,47,0.666,48,0.666,49,2.356,50,0.666,51,0.666,52,0.666,53,0.666,54,0.666,55,1.064,56,0.666,57,0.666,58,0.666,59,1.329,60,0.666,61,0.666,62,0.666,63,0.666,64,0.666,65,0.666,66,0.666,67,1.329,68,0.666,69,0.666,70,0.666,71,0.666,72,0.666,73,0.666,74,0.666,75,0.666,76,0.666,77,0.666,78,1.329,79,0.666,80,0.666,81,0.666,82,0.666,83,0.666,84,0.666,85,0.666,86,1.329,87,0.666,88,0.666,89,0.666,90,0.666,91,0.666,92,0.666,93,0.666,94,0.666,95,0.666,96,0.666,97,0.666,98,1.064,99,0.666,100,0.666,101,0.666,102,0.666,103,0.666,104,0.666,105,0.666,106,0.666,107,0.666,108,0.666,109,0.666,110,0.666,111,0.666,112,0.666,113,0.666,114,1.064,115,0.666,116,0.666,117,0.666,118,0.666,119,1.064,120,0.666,121,0.666,122,0.666,123,0.666]],["title/2",[0,0.087,20,0.693]],["description/2",[0,0.137,1,0.137,6,1.092,7,0.562,8,1.092,9,0.562,10,0.562,11,0.562,21,0.562]],["title/3",[124,1.514]],["description/3",[0,0.134,1,0.134,7,0.549,10,0.549,21,0.549,33,1.067,125,1.854,126,1.854,127,1.854,128,1.854,129,1.854,130,1.854]]],"invertedIndex":[["",{"_index":31,"title":{},"description":{"0":{},"1":{}}}],["0",{"_index":86,"title":{},"description":{"1":{}}}],["001",{"_index":47,"title":{},"description":{"1":{}}}],["004",{"_index":57,"title":{},"description":{"1":{}}}],["02",{"_index":89,"title":{},"description":{"1":{}}}],["033",{"_index":61,"title":{},"description":{"1":{}}}],["04",{"_index":90,"title":{},"description":{"1":{}}}],["041",{"_index":65,"title":{},"description":{"1":{}}}],["077",{"_index":76,"title":{},"description":{"1":{}}}],["09",{"_index":91,"title":{},"description":{"1":{}}}],["1",{"_index":67,"title":{},"description":{"1":{}}}],["101",{"_index":63,"title":{},"description":{"1":{}}}],["104",{"_index":79,"title":{},"description":{"1":{}}}],["109",{"_index":97,"title":{},"description":{"1":{}}}],["11",{"_index":50,"title":{},"description":{"1":{}}}],["110",{"_index":100,"title":{},"description":{"1":{}}}],["111",{"_index":101,"title":{},"description":{"1":{}}}],["112",{"_index":78,"title":{},"description":{"1":{}}}],["115",{"_index":95,"title":{},"description":{"1":{}}}],["12",{"_index":51,"title":{},"description":{"1":{}}}],["121",{"_index":98,"title":{},"description":{"1":{}}}],["136",{"_index":82,"title":{},"description":{"1":{}}}],["15",{"_index":52,"title":{},"description":{"1":{}}}],["17",{"_index":53,"title":{},"description":{"1":{}}}],["18",{"_index":54,"title":{},"description":{"1":{}}}],["180",{"_index":99,"title":{},"description":{"1":{}}}],["188",{"_index":96,"title":{},"description":{"1":{}}}],["2",{"_index":113,"title":{},"description":{"1":{}}}],["201",{"_index":64,"title":{},"description":{"1":{}}}],["21",{"_index":59,"title":{},"description":{"1":{}}}],["224",{"_index":84,"title":{},"description":{"1":{}}}],["237",{"_index":87,"title":{},"description":{"1":{}}}],["240",{"_index":44,"title":{},"description":{"1":{}}}],["26",{"_index":92,"title":{},"description":{"1":{}}}],["3",{"_index":114,"title":{},"description":{"1":{}}}],["31",{"_index":55,"title":{},"description":{"1":{}}}],["341",{"_index":93,"title":{},"description":{"1":{}}}],["399",{"_index":102,"title":{},"description":{"1":{}}}],["400",{"_index":43,"title":{},"description":{"1":{}}}],["41",{"_index":60,"title":{},"description":{"1":{}}}],["435",{"_index":105,"title":{},"description":{"1":{}}}],["51",{"_index":56,"title":{},"description":{"1":{}}}],["643",{"_index":107,"title":{},"description":{"1":{}}}],["712",{"_index":109,"title":{},"description":{"1":{}}}],["748",{"_index":111,"title":{},"description":{"1":{}}}],["756",{"_index":115,"title":{},"description":{"1":{}}}],["8",{"_index":68,"title":{},"description":{"1":{}}}],["api",{"_index":0,"title":{"0":{},"2":{}},"description":{"0":{},"2":{},"3":{}}}],["arquivo",{"_index":10,"title":{},"description":{"0":{},"2":{},"3":{}}}],["array",{"_index":36,"title":{},"description":{"0":{}}}],["b",{"_index":69,"title":{},"description":{"1":{}}}],["banco",{"_index":39,"title":{"1":{}},"description":{"1":{}}}],["bancoob",{"_index":116,"title":{},"description":{"1":{}}}],["banrisul",{"_index":66,"title":{},"description":{"1":{}}}],["base",{"_index":14,"title":{},"description":{"0":{}}}],["bnb",{"_index":58,"title":{},"description":{"1":{}}}],["boleto",{"_index":8,"title":{},"description":{"0":{},"2":{}}}],["bradesco",{"_index":88,"title":{},"description":{"1":{}}}],["brasil",{"_index":48,"title":{},"description":{"1":{}}}],["cada",{"_index":34,"title":{},"description":{"0":{},"1":{}}}],["campo",{"_index":120,"title":{},"description":{"1":{}}}],["carteira",{"_index":45,"title":{},"description":{"1":{}}}],["cef",{"_index":80,"title":{},"description":{"1":{}}}],["cnab",{"_index":11,"title":{},"description":{"0":{},"1":{},"2":{}}}],["com",{"_index":23,"title":{},"description":{"0":{}}}],["como",{"_index":13,"title":{},"description":{"0":{}}}],["comp",{"_index":42,"title":{},"description":{"1":{}}}],["contain",{"_index":4,"title":{},"description":{"0":{}}}],["contendo",{"_index":25,"title":{},"description":{"0":{}}}],["csb",{"_index":104,"title":{},"description":{"1":{}}}],["código",{"_index":41,"title":{},"description":{"1":{}}}],["dado",{"_index":27,"title":{},"description":{"0":{}}}],["de",{"_index":7,"title":{},"description":{"0":{},"2":{},"3":{}}}],["delcr",{"_index":106,"title":{},"description":{"1":{}}}],["detalh",{"_index":118,"title":{},"description":{"1":{}}}],["disponívei",{"_index":46,"title":{},"description":{"1":{}}}],["do",{"_index":28,"title":{},"description":{"0":{}}}],["docker",{"_index":5,"title":{},"description":{"0":{}}}],["download",{"_index":125,"title":{},"description":{"3":{}}}],["e",{"_index":9,"title":{},"description":{"0":{},"1":{},"2":{}}}],["em",{"_index":3,"title":{},"description":{"0":{}}}],["encontrado",{"_index":123,"title":{},"description":{"1":{}}}],["endpoint",{"_index":21,"title":{},"description":{"0":{},"2":{},"3":{}}}],["envi",{"_index":18,"title":{},"description":{"0":{}}}],["fibra",{"_index":85,"title":{},"description":{"1":{}}}],["file",{"_index":124,"title":{"3":{}},"description":{}}],["file/{filenam",{"_index":130,"title":{},"description":{"3":{}}}],["gerado",{"_index":128,"title":{},"description":{"3":{}}}],["gerar",{"_index":30,"title":{},"description":{"0":{}}}],["geração",{"_index":6,"title":{},"description":{"0":{},"2":{}}}],["host",{"_index":22,"title":{},"description":{"0":{}}}],["hsbc",{"_index":103,"title":{},"description":{"1":{}}}],["implementado",{"_index":40,"title":{"1":{}},"description":{"1":{}}}],["informado",{"_index":35,"title":{},"description":{"0":{}}}],["inter",{"_index":77,"title":{},"description":{"1":{}}}],["ir",{"_index":29,"title":{},"description":{"0":{}}}],["itau",{"_index":94,"title":{},"description":{"1":{}}}],["json",{"_index":24,"title":{},"description":{"0":{}}}],["k",{"_index":70,"title":{},"description":{"1":{}}}],["laravel-boleto",{"_index":2,"title":{"0":{}},"description":{}}],["laravel-boleto](https://github.com/eduardokum/laravel-boleto",{"_index":17,"title":{},"description":{"0":{},"1":{}}}],["m",{"_index":71,"title":{},"description":{"1":{}}}],["mai",{"_index":117,"title":{},"description":{"1":{}}}],["n",{"_index":72,"title":{},"description":{"1":{}}}],["o",{"_index":15,"title":{},"description":{"0":{}}}],["os",{"_index":26,"title":{},"description":{"0":{},"1":{}}}],["ou",{"_index":126,"title":{},"description":{"3":{}}}],["ourinvest",{"_index":110,"title":{},"description":{"1":{}}}],["p",{"_index":73,"title":{},"description":{"1":{}}}],["packag",{"_index":16,"title":{},"description":{"0":{},"1":{}}}],["para",{"_index":1,"title":{"0":{}},"description":{"0":{},"1":{},"2":{},"3":{}}}],["pdf",{"_index":33,"title":{},"description":{"0":{},"3":{}}}],["pela",{"_index":129,"title":{},"description":{"3":{}}}],["pine",{"_index":108,"title":{},"description":{"1":{}}}],["podem",{"_index":121,"title":{},"description":{"1":{}}}],["post",{"_index":20,"title":{"2":{}},"description":{"0":{}}}],["rem",{"_index":127,"title":{},"description":{"3":{}}}],["remessa",{"_index":37,"title":{},"description":{"0":{}}}],["rg",{"_index":81,"title":{},"description":{"1":{}}}],["santand",{"_index":62,"title":{},"description":{"1":{}}}],["ser",{"_index":122,"title":{},"description":{"1":{}}}],["sicredi",{"_index":112,"title":{},"description":{"1":{}}}],["sim",{"_index":49,"title":{},"description":{"1":{}}}],["sobr",{"_index":119,"title":{},"description":{"1":{}}}],["todo",{"_index":38,"title":{},"description":{"0":{}}}],["u",{"_index":74,"title":{},"description":{"1":{}}}],["um",{"_index":19,"title":{},"description":{"0":{}}}],["unicr",{"_index":83,"title":{},"description":{"1":{}}}],["utilizando",{"_index":12,"title":{},"description":{"0":{}}}],["vário",{"_index":32,"title":{},"description":{"0":{}}}],["x",{"_index":75,"title":{},"description":{"1":{}}}]],"pipeline":[]}},"options":{}};
+
+      var container = document.getElementById('redoc');
+      Redoc.hydrate(__redoc_state, container);
+
+      </script>
+</body>
+
+</html>
