@@ -153,7 +153,6 @@ Caso você deseje customizar a imagem Docker:
 ```
 docker compose build
 docker compose push
-
 ```
 
 
