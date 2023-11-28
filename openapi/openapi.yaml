@@ -407,7 +407,7 @@ components:
           type: integer
           example: 1
           description: Número do boleto, que compõe o "Nosso Número"
-        numeroDocumento:
+        numero_documento:
           type: string
           example: "NF1010-1"
           description: Número do documento. Um código que identifica a cobrança por parte do beneficiário
