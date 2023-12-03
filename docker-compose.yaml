@@ -16,6 +16,25 @@ services:
       - type: volume
         source: storage
         target: /var/www/html/storage
+    networks:
+      - net
+
+  mongodb:
+    image: mongo:7-jammy
+    container_name: api-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - type: volume
+        source: mongodb
+        target: /data/db
+    networks:
+      - net
 
 volumes:
   storage:
+  mongodb:
+
+networks:
+  net:

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\BoletoController;
+use App\Http\Controllers\RemessaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/', [ApiController::class, 'store']);
+Route::apiResource('/boleto', BoletoController::class);
+
+Route::apiResource('/remessa', RemessaController::class);
 

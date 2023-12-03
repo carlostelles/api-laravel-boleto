@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BoletoResource extends JsonResource
+class RemessaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,5 +16,4 @@ class BoletoResource extends JsonResource
     {
         return parent::toArray($request);
     }
-
 }

@@ -17,7 +17,9 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "spatie/laravel-directory-cleanup": "^1.9"
+        "mongodb/laravel-mongodb": "^4.0",
+        "spatie/laravel-directory-cleanup": "^1.9",
+        "tamer-dev/laravel-env-cli": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

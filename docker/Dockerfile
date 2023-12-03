@@ -15,7 +15,10 @@ RUN apk add --no-cache \
   icu-dev \
   git \
   supervisor \
-  nginx
+  nginx \ 
+  curl-dev \
+  openssl-dev \
+  php81-pecl-mongodb
 
 # Copy nginx config file
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
@@ -23,10 +26,18 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 # Copy supervisord config file
 COPY docker/supervisord.conf /etc/supervisord.conf
 
-# Install extensions
+# Copy php.ini
+COPY docker/php.ini /usr/local/etc/php/php.ini
+
+# Copy ini for mongodb driver
+COPY docker/mongodb.ini /usr/local/etc/php/conf.d/mongodb.ini
+
+# Install and configure extensions
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install zip sodium intl && \
-    docker-php-ext-enable zip sodium
+    docker-php-ext-enable zip sodium && \
+    pecl install mongodb && \
+    pecl config-set php_ini /usr/local/etc/php/php.ini
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

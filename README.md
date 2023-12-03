@@ -23,7 +23,11 @@ docker compose up -d
 
 A documentação da API está disponível [aqui](https://trezzuri.github.io/api-laravel-boleto/)
 
-Os arquivos gerados pela API são mantidos por até **7 dias**, após isso são **apagados**.
+A API usa o MongoDB para salvar os dados dos boletos e arquivos CNAB gerados.
+
+Os registros ficam armazenados no MongoDB até que sejam expressamente apagados através de um DELETE no endpoint da API.
+
+Porém, os arquivos PDF e REM gerados pela API são mantidos por até **7 dias**, após isso são **apagados**. 
 
 ## Como Usar
 
@@ -31,17 +35,38 @@ Você pode usar uma plataforma, como por exemplo o [Postman](https://www.postman
 
 Por padrão, o serviço estará disponível na porta 8900 de seu host. Ex: http://localhost:8900
 
-Envie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos. Ex: http://localhost:8900/api
-
-A API irá gerar:
-- Vários arquivos PDF, um para cada boleto informado no array "boletos" do POST
-- Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST
+Envie um POST para o endpoint /api/boleto do host com um JSON contendo os dados para a geração dos boletos. Ex: http://localhost:8900/api/boleto
 
 Exemplo de JSON a ser enviado para a API:
 ```
 {
-  "banco": {
-    "codigoCompe": "001",
+  "banco": "001",
+  "dados": {
+    "beneficiario": {
+      "nome": "ACME",
+      "endereco": "Rua um, 123",
+      "cep": "99999-999",
+      "uf": "UF",
+      "cidade": "CIDADE",
+      "documento": "99.999.999/9999-62"
+    },
+    "pagador": {
+      "nome": "Cliente",
+      "endereco": "Rua um, 123",
+      "bairro": "Bairro",
+      "cep": "99999-999",
+      "uf": "UF",
+      "cidade": "CIDADE",
+      "documento": "099.999.999-05"
+    },
+    "numero": 1,
+    "numeroDocumento": "DOC1234567",
+    "dataVencimento": "2023-02-15",
+    "valor": 12345.67,
+    "multa": 0,
+    "juros": 0,
+    "aceite": 0,
+    "especieDoc": "DM",
     "agencia": "0011",
     "conta": "22222",
     "carteira": "11",
@@ -51,71 +76,36 @@ Exemplo de JSON a ser enviado para a API:
     "posto": "",
     "range": "",
     "byte": "",
+    "descricaoDemonstrativo": "Descrição do demonstrativo de cobrança",
+    "instrucoes": "Descrição das instruções de cobrança",
+    "logo": "",
     "modalidadeCarteira": "",
     "variacaoCarteira": "",
     "diasBaixaAutomatica": "",
     "diasProtesto": ""
-  },
-  "beneficiario": {
-    "nome": "ACME",
-    "endereco": "Rua um, 123",
-    "cep": "99999-999",
-    "uf": "UF",
-    "cidade": "CIDADE",
-    "documento": "99.999.999/9999-99",
-    "logo": ""
-  },
-  "cnab": {
-    "layout": "400",
-    "idremessa": 1
-  },
-  "boletos": [
-    {
-      "pagador": {
-        "nome": "Cliente",
-        "endereco": "Rua um, 123",
-        "bairro": "Bairro",
-        "cep": "99999-999",
-        "uf": "UF",
-        "cidade": "CIDADE",
-        "documento": "999.999.999-99"
-      },
-      "numero": 1,
-      "numeroDocumento": "DOC1234567",
-      "dataVencimento": "2023-02-15",
-      "valor": 12345.67,
-      "multa": 0,
-      "juros": 0,
-      "descricaoDemonstrativo": "Descrição do demonstrativo de cobrança",
-      "instrucoes": "Descrição das instruções de cobrança",
-      "aceite": 0,
-      "especieDoc": "DM"
-    }
-  ]
+  }
 }
 ```
 
-A API irá retornar a seguinte estrutura:
+Em caso de sucesso, a API irá retornar algo como:
 ```
 {
-    "status": 0,
-    "mensagem": "",
-    "remessa": "001655613e9d6537.rem",
-    "boletos": [
-        {
-            "linha_digitavel": "00191.23124 30000.100112 00022.222111 2 92620001234567",
-            "codigo_barras": "00192926200012345671231230000100110002222211",
-            "numero": 1,
-            "numero_documento": "DOC1234567",
-            "nosso_numero": "12312300001",
-            "nosso_numero_boleto": "12312300001-2",
-            "pdf": "001655613e9d5247.pdf"
-        }
-    ]
+    "data": {
+        "_id": "656ce688332a2e8379083ed3",
+        "linha_digitavel": "00191.23124 30000.100112 00022.222111 2 92620001234567",
+        "codigo_barras": "00192926200012345671231230000100110002222211",
+        "numero": 1,
+        "numero_documento": "DOC1234567",
+        "nosso_numero": "12312300001",
+        "nosso_numero_boleto": "12312300001-2",
+        "pdf": "001656ce68859f3a.pdf"
+    }
 }
 ```
 
-Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint /file informando o nome do arquivo recebido no retorno do POST. Ex: http://localhost:8900/file/001655613e9d6537.rem
+Para realizar o download dos arquivos gerados pela API, faça um GET no endpoint /file informando o nome do arquivo recebido no retorno do POST. Ex: http://localhost:8900/file/001656ce68859f3a.pdf
+
+Para saber sobre o funcionamento completo da API, [consulte a documentação](https://trezzuri.github.io/api-laravel-boleto/)
 
 ## Bancos Implementados
 
@@ -145,9 +135,10 @@ Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para 
 
 Caso você deseje customizar a imagem Docker:
 
-* Faça um fork do projeto
+* Faça um fork e clone do projeto
+* Copie o .env.example para .env e ajuste as variáveis
 * Realize suas alterações
-* Modifique o nome da imagem no docker-compose.yaml, trocando a linha "image: trezzuri/api-laravel-boleto" por outro repo
+* Modifique o nome da imagem no docker-compose.yaml, trocando a linha "image" por seu repo no Docker Hub
 * Execute:
 
 ```

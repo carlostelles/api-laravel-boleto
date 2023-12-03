@@ -11,12 +11,6 @@ info:
     API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package 
     [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
-    Envie um POST para o endpoint /api do host com um JSON contendo os dados para a geração dos boletos.
-
-    A API irá gerar:
-    - Vários arquivos PDF, um para cada boleto informado no array "boletos" do POST
-    - Um arquivo CNAB de remessa, contendo os dados de todos os boletos informados no POST
-
     Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
     para cada banco podem ser encontrados no package 
     [laravel-boleto](https://github.com/eduardokum/laravel-boleto).

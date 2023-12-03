@@ -35,6 +35,16 @@ return [
 
     'connections' => [
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => "mongodb://" . env('DB_USERNAME', 'root') . 
+                     ":" . env('DB_PASSWORD', '') .
+                     "@" . env('DB_HOST', 'localhost') . 
+                     ":" . env('DB_PORT', '27017') .
+                     "/?retryWrites=true&w=majority",
+            'database' => env('DB_DATABASE', 'laravel'),
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
