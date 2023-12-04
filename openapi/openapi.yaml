@@ -8,11 +8,11 @@ info:
   description: |-
     ## API para laravel-boleto
 
-    API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package 
-    [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+    API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package
+    laravel-boleto.
 
     Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
-    para cada banco podem ser encontrados no package 
+    para cada banco podem ser encontrados no  
     [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
 
   version: v1
