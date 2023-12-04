@@ -21,25 +21,195 @@ info:
     url: "https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE"
 
 paths:
-  /api:
+# API BOLETO
+  /api/boleto:
+    get:
+      operationId: boleto-get
+      summary: GET /api/boleto
+      description: Lista os boletos existentes
+      responses:
+        "200":
+          description: Lista de boletos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoletoResponseLista"
     post:
-      operationId: api
-      summary: POST /api
-      description: Endpoint para a geração de boletos e arquivo CNAB
+      operationId: boleto-post
+      summary: POST /api/boleto
+      description: Cria um novo boleto
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Request"
+              $ref: "#/components/schemas/BoletoRequest"
       responses:
         "200":
-          description: Boletos gerados com sucesso
+          description: Boleto criado com sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Response"
+                $ref: "#/components/schemas/Boleto200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
 
+  /api/boleto/{_id}:
+    get:
+      operationId: boleto-get-id
+      summary: GET /api/boleto/{_id}
+      description: Exibe os dados de um boleto
+      responses:
+        "200":
+          description: Boleto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boleto200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+    put:
+      operationId: boleto-put-id
+      summary: PUT /api/boleto/{_id}
+      description: Atualiza um boleto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoletoRequest"
+      responses:
+        "200":
+          description: Boleto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boleto200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+    delete:
+      operationId: boleto-delete-id
+      summary: DELETE /api/boleto/{_id}
+      description: Apaga um boleto
+      responses:
+        "200":
+          description: Boleto apagado com sucesso
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+# API REMESSA
+  /api/remessa:
+    get:
+      operationId: remessa-get
+      summary: GET /api/remessa
+      description: Lista as remessas existentes
+      responses:
+        "200":
+          description: Lista de remessas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemessaResponseLista"
+    post:
+      operationId: remessa-post
+      summary: POST /api/remessa
+      description: Cria um novo arquivo de remessa CNAB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemessaRequest"
+      responses:
+        "200":
+          description: Remessa criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Remessa200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+  /api/remessa/{_id}:
+    get:
+      operationId: remessa-get-id
+      summary: GET /api/remessa/{_id}
+      description: Exibe os dados de uma remessa
+      responses:
+        "200":
+          description: Remessa encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Remessa200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+    put:
+      operationId: remessa-put-id
+      summary: PUT /api/remessa/{_id}
+      description: Atualiza uma remessa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemessaRequest"
+      responses:
+        "200":
+          description: Remessa atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Remessa200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+    delete:
+      operationId: remessa-delete-id
+      summary: DELETE /api/remessa/{_id}
+      description: Apaga uma remessa
+      responses:
+        "200":
+          description: Remessa apagada com sucesso
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+# FILE
   /file/{filename}:
     get:
       operationId: file
@@ -56,51 +226,7 @@ paths:
 
 components:
   schemas:
-    Request:
-      description: Estrutura da request a ser enviada para a API
-      type: object
-      required:
-      - banco
-      - beneficiario
-      - cnab
-      - boletos
-      properties:
-        banco:
-          $ref: "#/components/schemas/Banco"
-        beneficiario:
-          $ref: "#/components/schemas/Beneficiario"
-        cnab:
-          $ref: "#/components/schemas/Cnab"
-        boletos:
-          type: array
-          description: Dados dos boletos a serem gerados
-          items:
-            $ref: "#/components/schemas/Boleto"
-
-    Response:
-      description: Estrutura da response retornada pela API
-      type: object
-      properties:
-        status:
-          type: integer
-          example: 0
-          description: |-
-            Status do processamento. 
-            Se zero, sucesso; diferente de zero, ver campo mensagem.
-        mensagem:
-          type: string
-          example: ""
-          description: Mensagem de erro ocorrida durante o processamento
-        remessa:
-          type: string
-          example: "001655613e9d6537.rem"
-          description: Nome do arquivo da remessa, a ser usado pelo endpoint /file para download
-        boletos:
-          type: array
-          description: Dados dos boletos criados pela API
-          items:
-            $ref: "#/components/schemas/BoletoResponse"
-
+# ESTRUTURAS DE BASE
     Beneficiario:
       description: Dados do beneficiário
       type: object
@@ -136,13 +262,6 @@ components:
           description: CNPJ ou CPF do beneficiário
           type: string
           example: "99.999.999/9999-99"
-        logo:
-          description: |-
-            URL para a imagem do logotipo do beneficiário, em formato png ou jpg,
-            que será usada na geração do PDF do boleto.
-            Caso não seja preenchido, será usado o logo do banco emissor.
-          type: string
-          example: ""
 
     Pagador:
       description: Dados do pagador
@@ -184,19 +303,68 @@ components:
           type: string
           example: "999.999.999-99"
 
-    Banco:
-      description: Dados do banco emissor e demais parâmetros para a geração dos boletos
+    BoletoDados:
+      description: Dados do boleto
       type: object
       required:
-      - codigoCompe
+      - beneficiario
+      - pagador
+      - numero
+      - numeroDocumento
+      - dataVencimento
+      - valor
+      - multa
+      - juros
+      - aceite
+      - especieDoc
       - agencia
       - conta
       - carteira
       properties:
-        codigoCompe:
-          description: Código COMPE do banco com 3 dígitos
+        beneficiario:
+          description: Dados do beneficiário
+          $ref: "#/components/schemas/Beneficiario"
+        pagador:
+          description: Dados do pagador
+          $ref: "#/components/schemas/Pagador"
+        numero:
+          type: integer
+          example: 1
+          description: Número do boleto, que irá compor o "Nosso Número"
+        numeroDocumento:
           type: string
-          example: "001"
+          example: "NF1010-1"
+          description: Número do documento. Um código que identifica a cobrança por parte do beneficiário
+        dataVencimento:
+          type: string
+          format: date
+          example: "2023-02-15"
+          description: Data de vencimento do boleto no formato AAAA-MM-DD
+        valor:
+          type: number
+          example: 12345.67
+          description: Valor do boleto
+        multa:
+          type: number
+          example: 0
+          description: Percentual da multa, aplicada em caso de atraso no pagamento
+        juros:
+          type: number
+          example: 0
+          description: Percentual dos juros de mora ao mês, aplicados em caso de atraso no pagamento
+        aceite:
+          type: integer
+          example: 0
+          description: |- 
+            Identificador de título aceito ou não aceito previamente pelo pagador.
+            Valores possíveis: 0 - Não aceito, 1 - Aceito. 
+        especieDoc:
+          type: string
+          example: "DM"
+          description: |-
+            Espécie do documento que originou a cobrança:
+            "DM": Mercadorias,
+            "DS": Serviços
         agencia:
           description: Número da agência bancária do beneficiário
           type: string
@@ -277,84 +445,6 @@ components:
             Nem todos os bancos dispõem desta funcionalidade, consulte o banco.
           type: integer
           example: 0
-
-    Cnab:
-      description: Dados do arquivo CNAB
-      type: object
-      required:
-      - layout
-      - idremessa
-      properties:
-        layout:
-          description: |-
-            Layout do arquivo CNAB a ser gerado.
-            Valores válidos: "240" ou "400"
-          type: string
-          example: "400"
-        idremessa:
-          description: |-
-            Sequencial da remessa. 
-            Este é um número sequencial de arquivos enviados ao banco, 
-            devendo ser iniciado em 1 caso seja o primeiro arquivo CNAB enviado.
-            Incrementar este campo em 1 para cada novo arquivo enviado ao banco.
-          type: integer
-          example: 1
-
-    Boleto:
-      description: Dados do boleto a ser gerado
-      type: object
-      required:
-      - pagador
-      - numero
-      - numeroDocumento
-      - dataVencimento
-      - valor
-      - multa
-      - juros
-      - aceite
-      - especieDoc
-      properties:
-        pagador:
-          description: Dados do pagador
-          $ref: "#/components/schemas/Pagador"
-        numero:
-          type: integer
-          example: 1
-          description: Número do boleto, que irá compor o "Nosso Número"
-        numeroDocumento:
-          type: string
-          example: "NF1010-1"
-          description: Número do documento. Um código que identifica a cobrança por parte do beneficiário
-        dataVencimento:
-          type: string
-          format: date
-          example: "2023-02-15"
-          description: Data de vencimento do boleto no formato AAAA-MM-DD
-        valor:
-          type: number
-          example: 12345.67
-          description: Valor do boleto
-        multa:
-          type: number
-          example: 0
-          description: Percentual da multa, aplicada em caso de atraso no pagamento
-        juros:
-          type: number
-          example: 0
-          description: Percentual dos juros de mora ao mês, aplicados em caso de atraso no pagamento
-        aceite:
-          type: integer
-          example: 0
-          description: |- 
-            Identificador de título aceito ou não aceito previamente pelo pagador.
-            Valores possíveis: 0 - Não aceito, 1 - Aceito. 
-        especieDoc:
-          type: string
-          example: "DM"
-          description: |-
-            Espécie do documento que originou a cobrança:
-            "DM": Mercadorias,
-            "DS": Serviços
         descricaoDemonstrativo:
           type: string
           example: "Descrição do demonstrativo de cobrança"
@@ -363,11 +453,208 @@ components:
           type: string
           example: "Descrição das instruções de cobrança"
           description: Descrição das instruções de cobrança, que aparecem no corpo do boleto
+        logo:
+          description: |-
+            URL para a imagem do logotipo do beneficiário, em formato png ou jpg,
+            que será usada na geração do PDF do boleto.
+            Caso não seja preenchido, será usado o logo do banco emissor.
+          type: string
+          example: ""
 
-    BoletoResponse:
+    RemessaDados:
+      description: Dados da remessa
+      type: object
+      required:
+      - idRemessa
+      - beneficiario
+      - agencia
+      - conta
+      - carteira
+      properties:
+        idRemessa:
+          description: |-
+            Sequencial da remessa. 
+            Este é um número sequencial de arquivos enviados ao banco, 
+            devendo ser iniciado em 1 caso seja o primeiro arquivo CNAB enviado.
+            Incrementar este campo em 1 para cada novo arquivo enviado ao banco.
+          type: integer
+          example: 1
+        beneficiario:
+          description: Dados do beneficiário
+          $ref: "#/components/schemas/Beneficiario"
+        agencia:
+          description: Número da agência bancária do beneficiário
+          type: string
+          example: "0011"
+        conta:
+          description: Conta bancária do beneficiário SEM o dígito verificador
+          type: string
+          example: "22222"
+        carteira:
+          description: |- 
+            Carteira de cobrança. 
+            Vide carteiras disponíveis para cada banco no descritivo da API.
+          type: string
+          example: "11"
+        convenio:
+          description: |-
+            Código do convênio do banco. Obrigatório apenas para os bancos:
+            001 - Banco do Brasil,
+            756 - Bancoob
+          type: string
+          example: "123123"
+        codigoCliente:
+          description: |-
+            Código do cliente no banco. Obrigatório apenas para os bancos:
+            033 - Santander,
+            104 - CEF,
+            224 - Fibra,
+            643 - Pine
+          type: string
+          example: ""
+        operacao:
+          description: |-
+            Obrigatório apenas para banco 077 - Inter. 
+            Consulte seu número da operação no internet banking.
+          type: string
+          example: ""
+        posto:
+          description: |-
+            Obrigatório apenas para banco 748 - Sicredi. 
+            Posto da cooperativa de crédito/agência beneficiária.
+          type: string
+          example: ""
+        range:
+          description: |- 
+            Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
+            Faixa de valor a ser usada para compor o "Nosso Número", 
+            consulte o banco para mais informações.
+          type: string
+          example: ""
+        byte:
+          description: |-
+            Obrigatório apenas para banco 748 - Sicredi. 
+            Informar valor de 2 a 9, significa que o "Nosso Número" foi gerado pelo beneficiário.
+          type: string
+          example: ""
+        modalidadeCarteira:
+          description: |- 
+            Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
+            Modalidade de cobrança com bancos correspondentes, 
+            consulte o banco para mais informações.
+          type: string
+          example: ""
+        variacaoCarteira:
+          description: |-
+            Obrigatório apenas para banco 001 - Banco do Brasil e CNAB240.
+            Informar o número da variação da carteira de cobrança.
+          type: string
+          example: ""
+
+    Metadata:
+      description: Metadados de listagem
+      type: object
+      properties:
+        current_page:
+          type: integer
+          example: 1
+          description: Página corrente
+        from:
+          type: integer
+          example: 1
+          description: Registro inicial
+        last_page:
+          type: integer
+          example: 1
+          description: Última página
+        per_page:
+          type: integer
+          example: 500
+          description: Registros por página
+        total:
+          type: integer
+          example: 10
+          description: Total de registros
+
+    Erro400:
+      description: Response quando há erro no processamento
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+          description: Status do processamento
+        mensagem:
+          type: string
+          example: "Erro na validação de dados"
+          description: Mensagem de erro ocorrida durante o processamento
+        erros:
+          type: array
+          description: Detalhe dos erros ocorridos no processamento
+
+
+# REQUESTS
+
+    BoletoRequest:
+      description: Estrutura da request a ser enviada para o endpoint boleto
+      type: object
+      required:
+      - banco
+      - dados
+      properties:
+        banco:
+          description: Código COMPE do banco com 3 dígitos
+          type: string
+          example: "001"
+        dados:
+          description: Dados do boleto
+          $ref: "#/components/schemas/BoletoDados"
+
+    RemessaRequest:
+      description: Estrutura da request a ser enviada para o endpoint remessa
+      type: object
+      required:
+      - banco
+      - layout
+      - boletos
+      - dados
+      properties:
+        banco:
+          description: Código COMPE do banco com 3 dígitos
+          type: string
+          example: "001"
+        layout:
+          description: |-
+            Layout do arquivo CNAB a ser gerado.
+            Valores válidos: "240" ou "400"
+          type: string
+          example: "400"
+        boletos:
+          description: Array contendo os IDs dos boletos que irão compor a remessa
+          type: array
+          example: ['656d08d1332a2e8379083ed5', '656d2432016821a97c036c34']
+        dados:
+          description: Dados da remessa
+          $ref: "#/components/schemas/RemessaDados"
+
+
+# RESPONSES
+
+    BoletoResponseData:
       description: Dados do boleto gerado
       type: object
       properties:
+        _id:
+          type: string
+          example: "656b345e2fda93a9ee0b9ea7"
+          description: ID do boleto
+        banco:
+          type: string
+          example: "001"
+          description: Código COMPE do banco
+        dados:
+          type: object
+          description: Dados do boleto
         linha_digitavel:
           type: string
           example: "00191.23124 30000.100112 00022.222111 2 92620001234567"
@@ -396,6 +683,84 @@ components:
           type: string
           example: "001655613e9d5247.pdf"
           description: Nome do arquivo PDF do boleto, a ser usado pelo endpoint /file para download
+
+    BoletoResponseLista:
+      description: Lista de boletos
+      type: object
+      properties:
+        data:
+          type: array
+          description: Dados dos boletos
+          items:
+            $ref: "#/components/schemas/BoletoResponseData"
+        meta:
+          type: array
+          description: Metadados da lista
+          items:
+            $ref: "#/components/schemas/Metadata"
+
+    Boleto200:
+      description: Estrutura da response retornada pelo endpoint boleto quando processamento OK
+      type: object
+      properties:
+        data:
+          type: array
+          description: Dados do boleto gerado
+          items:
+            $ref: "#/components/schemas/BoletoResponseData"
+
+    RemessaResponseData:
+      description: Dados da remessa gerada
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "656dc2aae8862d4fe00604f2"
+          description: ID da remessa
+        banco:
+          type: string
+          example: "001"
+          description: Código COMPE do banco
+        layout:
+          description: |-
+            Layout do arquivo CNAB a ser gerado.
+            Valores válidos: "240" ou "400"
+          type: string
+          example: "400"
+        dados:
+          type: object
+          description: Dados da remessa
+        arquivo:
+          type: string
+          example: "001656dc2aa4a75c.rem"
+          description: Nome do arquivo de remessa, a ser usado pelo endpoint /file para download
+
+    RemessaResponseLista:
+      description: Lista de remessas
+      type: object
+      properties:
+        data:
+          type: array
+          description: Dados das remessas
+          items:
+            $ref: "#/components/schemas/RemessaResponseData"
+        meta:
+          type: array
+          description: Metadados da lista
+          items:
+            $ref: "#/components/schemas/Metadata"
+
+    Remessa200:
+      description: Estrutura da response retornada pelo endpoint remessa quando processamento OK
+      type: object
+      properties:
+        data:
+          type: array
+          description: Dados da remessa gerada
+          items:
+            $ref: "#/components/schemas/RemessaResponseData"
+
+
 
 externalDocs:
   description: Para maiores informações, consulte o projeto no Github
