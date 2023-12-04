@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Boleto;
 use App\Console\ValidaCPFCNPJ;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -81,6 +82,44 @@ class RemessaRequest extends FormRequest
                         'layout',
                         'Layout CNAB ' . $layout . ' não foi implementado para o banco ' . $banco
                     );
+
+                // verifica se o boleto existe e se é do mesmo beneficiário / conta da remessa
+                foreach ($this->input('boletos') as $id) {
+                    $boleto = Boleto::find($id);
+                    if (!isset($boleto)) {
+                        $validator->errors()->add(
+                            'boletos',
+                            'Boleto ' . $id . ' não encontrado'
+                        );
+                    }
+                    else {
+                        if ($this->input('banco') != $boleto->banco)
+                            $validator->errors()->add(
+                                'boletos',
+                                'Banco ' . $boleto->banco . ' no boleto ' . $id . 
+                                ' divergente do banco da remessa ' . $this->input('banco')
+                            );
+                        if ($pessoa->getDocumento() != $boleto->dados['beneficiario']['documento'])
+                            $validator->errors()->add(
+                                'boletos',
+                                'Documento do beneficiário ' .  $boleto->dados['beneficiario']['documento'] . ' no boleto ' . $id . 
+                                ' divergente do beneficiário da remessa ' . $pessoa->getDocumento()
+                            );
+                        if ($this->input('dados')['agencia'] != $boleto->dados['agencia'])
+                            $validator->errors()->add(
+                                'boletos',
+                                'Agência ' . $boleto->dados['agencia'] . ' no boleto ' . $id . 
+                                ' divergente da agência da remessa ' . $this->input('dados')['agencia']
+                            );
+                        if ($this->input('dados')['conta'] != $boleto->dados['conta'])
+                            $validator->errors()->add(
+                                'boletos',
+                                'Conta ' . $boleto->dados['conta'] . ' no boleto ' . $id . 
+                                ' divergente da conta da remessa ' . $this->input('dados')['conta']
+                            );
+                    }
+                }
+        
             }
         ];
     }
