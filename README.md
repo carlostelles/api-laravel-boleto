@@ -23,7 +23,7 @@ docker compose up -d
 
 A documentação da API está disponível [aqui](https://trezzuri.github.io/api-laravel-boleto/)
 
-A API usa o MongoDB para salvar os dados dos boletos e arquivos CNAB gerados.
+A API usa o MongoDB para salvar os dados dos boletos e remessas gerados.
 
 Os registros ficam armazenados no MongoDB até que sejam expressamente apagados através de um DELETE no endpoint da API.
 
