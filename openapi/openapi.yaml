@@ -1,15 +1,18 @@
 openapi: 3.0.0
 
 servers:
-  - url: "http://localhost:8900"
+  - url: "http://localhost:8080"
 
 info:
-  title: api-laravel-boleto
+  title: api-boleto-cnab
   description: |-
-    ## API para laravel-boleto
+    ## API para emissão de boleto e arquivos CNAB
 
-    API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package
-    laravel-boleto.
+    ### Processo de geracão de boletos e arquivos de remessa
+
+    1. Realize chamada POST em /api/boleto para geracao do(s) boletos.
+    2. Com os IDs retornados na criacão de cada boleto, realize uma chamada POST em /api/remessa com o array de ids dos boletos, para criacão do arquivo de remessa.
+    3. Realize uma chama GET para /file/{nome_arquivo}  com o nome do arquivo retornado nas requisicoes anteriores.
 
     Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
     para cada banco podem ser encontrados no  
@@ -21,7 +24,7 @@ info:
     url: "https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE"
 
 paths:
-# API BOLETO
+  # API BOLETO
   /api/boleto:
     get:
       operationId: boleto-get
@@ -115,7 +118,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Erro400"
 
-# API REMESSA
+  # API REMESSA
   /api/remessa:
     get:
       operationId: remessa-get
@@ -209,7 +212,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Erro400"
 
-# FILE
+  # FILE
   /file/{filename}:
     get:
       operationId: file
@@ -226,17 +229,17 @@ paths:
 
 components:
   schemas:
-# ESTRUTURAS DE BASE
+    # ESTRUTURAS DE BASE
     Beneficiario:
       description: Dados do beneficiário
       type: object
       required:
-      - nome
-      - endereco
-      - cep
-      - uf
-      - cidade
-      - documento
+        - nome
+        - endereco
+        - cep
+        - uf
+        - cidade
+        - documento
       properties:
         nome:
           description: Nome ou razão social do beneficiário
@@ -267,12 +270,12 @@ components:
       description: Dados do pagador
       type: object
       required:
-      - nome
-      - endereco
-      - cep
-      - uf
-      - cidade
-      - documento
+        - nome
+        - endereco
+        - cep
+        - uf
+        - cidade
+        - documento
       properties:
         nome:
           description: Nome do pagador
@@ -307,19 +310,19 @@ components:
       description: Dados do boleto
       type: object
       required:
-      - beneficiario
-      - pagador
-      - numero
-      - numeroDocumento
-      - dataVencimento
-      - valor
-      - multa
-      - juros
-      - aceite
-      - especieDoc
-      - agencia
-      - conta
-      - carteira
+        - beneficiario
+        - pagador
+        - numero
+        - numeroDocumento
+        - dataVencimento
+        - valor
+        - multa
+        - juros
+        - aceite
+        - especieDoc
+        - agencia
+        - conta
+        - carteira
       properties:
         beneficiario:
           description: Dados do beneficiário
@@ -355,9 +358,9 @@ components:
         aceite:
           type: integer
           example: 0
-          description: |- 
+          description: |-
             Identificador de título aceito ou não aceito previamente pelo pagador.
-            Valores possíveis: 0 - Não aceito, 1 - Aceito. 
+            Valores possíveis: 0 - Não aceito, 1 - Aceito.
         especieDoc:
           type: string
           example: "DM"
@@ -374,7 +377,7 @@ components:
           type: string
           example: "22222"
         carteira:
-          description: |- 
+          description: |-
             Carteira de cobrança. 
             Vide carteiras disponíveis para cada banco no descritivo da API.
           type: string
@@ -408,7 +411,7 @@ components:
           type: string
           example: ""
         range:
-          description: |- 
+          description: |-
             Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
             Faixa de valor a ser usada para compor o "Nosso Número", 
             consulte o banco para mais informações.
@@ -421,7 +424,7 @@ components:
           type: string
           example: ""
         modalidadeCarteira:
-          description: |- 
+          description: |-
             Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
             Modalidade de cobrança com bancos correspondentes, 
             consulte o banco para mais informações.
@@ -465,11 +468,11 @@ components:
       description: Dados da remessa
       type: object
       required:
-      - idRemessa
-      - beneficiario
-      - agencia
-      - conta
-      - carteira
+        - idRemessa
+        - beneficiario
+        - agencia
+        - conta
+        - carteira
       properties:
         idRemessa:
           description: |-
@@ -491,7 +494,7 @@ components:
           type: string
           example: "22222"
         carteira:
-          description: |- 
+          description: |-
             Carteira de cobrança. 
             Vide carteiras disponíveis para cada banco no descritivo da API.
           type: string
@@ -525,7 +528,7 @@ components:
           type: string
           example: ""
         range:
-          description: |- 
+          description: |-
             Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
             Faixa de valor a ser usada para compor o "Nosso Número", 
             consulte o banco para mais informações.
@@ -538,7 +541,7 @@ components:
           type: string
           example: ""
         modalidadeCarteira:
-          description: |- 
+          description: |-
             Obrigatório apenas para bancos 224 - Fibra e 643 - Pine.
             Modalidade de cobrança com bancos correspondentes, 
             consulte o banco para mais informações.
@@ -592,15 +595,14 @@ components:
           type: array
           description: Detalhe dos erros ocorridos no processamento
 
-
-# REQUESTS
+    # REQUESTS
 
     BoletoRequest:
       description: Estrutura da request a ser enviada para o endpoint boleto
       type: object
       required:
-      - banco
-      - dados
+        - banco
+        - dados
       properties:
         banco:
           description: Código COMPE do banco com 3 dígitos
@@ -614,10 +616,10 @@ components:
       description: Estrutura da request a ser enviada para o endpoint remessa
       type: object
       required:
-      - banco
-      - layout
-      - boletos
-      - dados
+        - banco
+        - layout
+        - boletos
+        - dados
       properties:
         banco:
           description: Código COMPE do banco com 3 dígitos
@@ -632,13 +634,12 @@ components:
         boletos:
           description: Array contendo os IDs dos boletos que irão compor a remessa
           type: array
-          example: ['656d08d1332a2e8379083ed5', '656d2432016821a97c036c34']
+          example: ["656d08d1332a2e8379083ed5", "656d2432016821a97c036c34"]
         dados:
           description: Dados da remessa
           $ref: "#/components/schemas/RemessaDados"
 
-
-# RESPONSES
+    # RESPONSES
 
     BoletoResponseData:
       description: Dados do boleto gerado
@@ -759,8 +760,6 @@ components:
           description: Dados da remessa gerada
           items:
             $ref: "#/components/schemas/RemessaResponseData"
-
-
 
 externalDocs:
   description: Para maiores informações, consulte o projeto no Github

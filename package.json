@@ -3,9 +3,11 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "build-docs": "redocly build-docs openapi/openapi.yaml --output=resources/views/docs.blade.php"
     },
     "devDependencies": {
+        "@redocly/cli": "^1.10.4",
         "axios": "^1.1.2",
         "laravel-vite-plugin": "^0.8.0",
         "vite": "^4.0.0"
