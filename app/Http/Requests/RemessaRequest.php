@@ -7,8 +7,8 @@ use App\Console\ValidaCPFCNPJ;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use \Eduardokum\LaravelBoleto\Pessoa;
-use \Eduardokum\LaravelBoleto\Util;
+use \Xpendi\CnabBoleto\Pessoa;
+use \Xpendi\CnabBoleto\Util;
 
 class RemessaRequest extends FormRequest
 {
@@ -76,7 +76,7 @@ class RemessaRequest extends FormRequest
                     
                 // verifica se o layout cnab está implementado
                 $layout = $this->input('layout');
-                $classe = '\\Eduardokum\\LaravelBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . $classe;
+                $classe = '\\Xpendi\\CnabBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . $classe;
                 if (! class_exists($classe)) 
                     $validator->errors()->add(
                         'layout',

@@ -1,6 +1,6 @@
 ## API laravel-boleto
 
-API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+API em container docker para geração de boletos e arquivos CNAB, utilizando como base o package [laravel-boleto](https://github.com/Xpendi/laravel-boleto).
 
 ## Pré-Requisitos
 
@@ -128,7 +128,7 @@ Para saber sobre o funcionamento completo da API, [consulte a documentação](ht
 | 748 - Sicredi | Sim | Sim | 1, 2, 3 |
 | 756 - Bancoob | Sim | Sim | 1, 3 |
 
-Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para cada banco podem ser encontrados no package [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para cada banco podem ser encontrados no package [laravel-boleto](https://github.com/Xpendi/laravel-boleto).
 
 
 ## Customizando a imagem Docker

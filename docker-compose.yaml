@@ -10,12 +10,15 @@ services:
     ports:
       - mode: ingress
         target: 80
-        published: "${APP_PORT:-8080}"
+        published: "${APP_PORT:-80}"
         protocol: tcp
     volumes:
       - type: volume
         source: storage
         target: /var/www/html/storage
+      - type: volume
+        source: app
+        target: /var/www/html/app
     networks:
       - net
 
@@ -33,6 +36,7 @@ services:
       - net
 
 volumes:
+  app:
   storage:
   mongodb:
 

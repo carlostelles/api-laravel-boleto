@@ -6,8 +6,8 @@ use App\Models\Boleto;
 use MongoDB\Laravel\Eloquent\Model; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use \Eduardokum\LaravelBoleto\Util;
-use \Eduardokum\LaravelBoleto\Pessoa;
+use \Xpendi\CnabBoleto\Util;
+use \Xpendi\CnabBoleto\Pessoa;
 use Illuminate\Support\Facades\Storage;
 
 class Remessa extends Model
@@ -45,7 +45,7 @@ class Remessa extends Model
         $dados['beneficiario'] = new Pessoa($dados['beneficiario']);
 
         // Cria o objeto Remessa
-        $classe = '\\Eduardokum\\LaravelBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . Util::getBancoClass($banco);
+        $classe = '\\Xpendi\\CnabBoleto\\Cnab\\Remessa\\Cnab' . $layout . '\\' . Util::getBancoClass($banco);
         $obj_cnab = new $classe($dados);
 
         // adiciona o boleto para geração do Remessa

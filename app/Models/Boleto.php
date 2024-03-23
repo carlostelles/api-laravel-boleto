@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use \Eduardokum\LaravelBoleto\Util;
-use \Eduardokum\LaravelBoleto\Pessoa;
-use \Eduardokum\LaravelBoleto\Boleto\Render\Pdf;
+use \Xpendi\CnabBoleto\Util;
+use \Xpendi\CnabBoleto\Pessoa;
+use \Xpendi\CnabBoleto\Boleto\Render\Pdf;
 use Carbon\Carbon;
  
 class Boleto extends Model
@@ -62,7 +62,7 @@ class Boleto extends Model
             get: function (mixed $value, array $attributes) {
 
                 // obtém a classe do boleto a ser gerado
-                $classe = '\\Eduardokum\\LaravelBoleto\\Boleto\\' . Util::getBancoClass($attributes['banco']);
+                $classe = '\\Xpendi\\CnabBoleto\\Boleto\\' . Util::getBancoClass($attributes['banco']);
 
                 // remove do array de dados os campos vazios para evitar mensagens de erro desnecessárias
                 $dados = array_filter($attributes['dados'], fn ($item) => !empty($item));
@@ -74,7 +74,7 @@ class Boleto extends Model
 
                 // obtém a url com o logo, senão usa o logo do banco
                 $dados['logo'] = $dados['logo'] ?? realpath(base_path() . 
-                    '/vendor/eduardokum/laravel-boleto/logos/' . $attributes['banco'] . '.png');
+                    '/vendor/Xpendi/laravel-boleto/logos/' . $attributes['banco'] . '.png');
 
                 // quebra os textos longos, se necessário
                 if (isset($dados['descricaoDemonstrativo']))

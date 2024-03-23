@@ -16,7 +16,7 @@ info:
 
     Mais detalhes sobre os bancos implementados e sobre os campos disponíveis 
     para cada banco podem ser encontrados no  
-    [laravel-boleto](https://github.com/eduardokum/laravel-boleto).
+    [laravel-boleto](https://github.com/Xpendi/laravel-boleto).
 
   version: v1
   license:

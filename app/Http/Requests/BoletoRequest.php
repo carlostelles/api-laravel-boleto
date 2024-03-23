@@ -6,8 +6,8 @@ use App\Console\ValidaCPFCNPJ;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use \Eduardokum\LaravelBoleto\Pessoa;
-use \Eduardokum\LaravelBoleto\Util;
+use \Xpendi\CnabBoleto\Pessoa;
+use \Xpendi\CnabBoleto\Util;
 
 class BoletoRequest extends FormRequest
 {

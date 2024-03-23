@@ -1,25 +1,25 @@
 {
-    "name": "trezzuri/api-laravel-boleto",
+    "name": "xpendi/api-cnab-boleto",
     "type": "project",
-    "description": "API simples para a package eduardokum/laravel-boleto",
+    "description": "API simples para a package xpendi/cnab-boleto",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "repositories": [
         {
             "type":"git",
-            "url": "https://github.com/trezzuri/laravel-boleto.git"
+            "url": "https://github.com/carlostelles/laravel-boleto.git"
         }   
     ],
     "require": {
         "php": "^8.1",
-        "eduardokum/laravel-boleto": "dev-master",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "mongodb/laravel-mongodb": "^4.0",
+        "mongodb/laravel-mongodb": "^4.2",
         "spatie/laravel-directory-cleanup": "^1.9",
-        "tamer-dev/laravel-env-cli": "^1.2"
+        "tamer-dev/laravel-env-cli": "^1.2",
+        "xpendi/cnab-boleto": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -70,6 +70,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
