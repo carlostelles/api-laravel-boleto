@@ -74,4 +74,4 @@ USER root
 # Define supervisor as entrypoint
 ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
 
-EXPOSE 80
+EXPOSE 80 443
