@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\RemessaController;
+use App\Http\Controllers\RetornoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('/boleto', BoletoController::class);
 
 Route::apiResource('/remessa', RemessaController::class);
+
+Route::apiResource('/retorno', RetornoController::class);
 

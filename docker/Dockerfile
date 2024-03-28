@@ -32,6 +32,13 @@ COPY docker/php.ini /usr/local/etc/php/php.ini
 # Copy ini for mongodb driver
 COPY docker/mongodb.ini /usr/local/etc/php/conf.d/mongodb.ini
 
+# Copy generate certficate script
+COPY docker/generate_cert.sh /usr/local/bin/
+
+#  Make the generate certificate script executable
+RUN chmod +x /usr/local/bin/generate_cert.sh
+RUN mkdir /certs
+
 # Install and configure extensions
 RUN docker-php-ext-configure intl && \
     docker-php-ext-install zip sodium intl && \
