@@ -33,24 +33,12 @@ COPY docker/php.ini /usr/local/etc/php/php.ini
 # Copy ini for mongodb driver
 COPY docker/mongodb.ini /usr/local/etc/php/conf.d/mongodb.ini
 
-# Execute o Certbot para obter e configurar o certificado SSL
-RUN certbot certonly --standalone -d cnab.apis.xpendi.com.br --non-interactive --agree-tos --email contato@xpendi.com.br && \
-    rm -rf /etc/letsencrypt/archive/* && \
-    rm -rf /etc/letsencrypt/live/*
-RUN ln -s /etc/letsencrypt/live/cnab.apis.xpendi.com.br /etc/letsencrypt/live/default
-RUN cp /etc/letsencrypt/live/cnab.apis.xpendi.com.br/fullchain.pem /etc/ssl/certs/default.crt
-RUN cp /etc/letsencrypt/live/cnab.apis.xpendi.com.br/privkey.pem /etc/ssl/private/default.key
-RUN cp /etc/letsencrypt/live/cnab.apis.xpendi.com.br/fullchain.pem /etc/nginx/ssl/cert.pem
-RUN cp /etc/letsencrypt/live/cnab.apis.xpendi.com.br/privkey.pem /etc/nginx/ssl/key.pem
-
-
 # Copy generate certficate script
-# COPY docker/generate_cert /usr/local/bin/
+COPY docker/generate_cert /usr/local/bin/
 
 #  Make the generate certificate script executable
-# RUN chmod +x /usr/local/bin/generate_cert
-# RUN mkdir /certs /etc/nginx/ssl
-# RUN generate_cert
+RUN chmod +x /usr/local/bin/generate_cert
+RUN mkdir /certs /etc/nginx/ssl
 
 # Install and configure extensions
 RUN docker-php-ext-configure intl && \
@@ -85,6 +73,6 @@ RUN php artisan key:generate
 USER root
 
 # Define supervisor as entrypoint
-ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf;", "generate_cert"]
 
 EXPOSE 80 443
