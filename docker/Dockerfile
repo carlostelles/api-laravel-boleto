@@ -33,11 +33,12 @@ COPY docker/php.ini /usr/local/etc/php/php.ini
 COPY docker/mongodb.ini /usr/local/etc/php/conf.d/mongodb.ini
 
 # Copy generate certficate script
-COPY docker/generate_cert.sh /usr/local/bin/
+COPY docker/generate_cert /usr/local/bin/
 
 #  Make the generate certificate script executable
-RUN chmod +x /usr/local/bin/generate_cert.sh
-RUN mkdir /certs
+RUN chmod +x /usr/local/bin/generate_cert
+RUN mkdir /certs /etc/nginx/ssl
+RUN generate_cert
 
 # Install and configure extensions
 RUN docker-php-ext-configure intl && \
@@ -74,4 +75,4 @@ USER root
 # Define supervisor as entrypoint
 ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
 
-EXPOSE 80 443
+EXPOSE 80
