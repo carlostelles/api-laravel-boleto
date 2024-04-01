@@ -64,10 +64,6 @@ COPY --chown=app:app ./.env.example /var/www/html/.env
 # Change current user to www
 USER app
 
-# Install composer packages and generate app key
-RUN composer install --no-interaction
-RUN php artisan key:generate
-
 # Change current user back to root
 USER root
 
