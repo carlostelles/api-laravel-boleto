@@ -65,7 +65,7 @@ COPY --chown=app:app ./.env.example /var/www/html/.env
 USER app
 
 # Install composer packages and generate app key
-RUN composer install --optimize-autoloader --no-interaction
+RUN composer install --no-interaction
 RUN php artisan key:generate
 
 # Change current user back to root
