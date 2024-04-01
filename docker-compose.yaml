@@ -17,12 +17,7 @@ services:
         published: "${APP_PORT:-443}"
         protocol: tcp
     volumes:
-      - type: volume
-        source: storage
-        target: /var/www/html/storage
-      - type: volume
-        source: app
-        target: /var/www/html/app
+      - "./:/var/www/html"
     networks:
       - net
 
@@ -40,8 +35,6 @@ services:
       - net
 
 volumes:
-  app:
-  storage:
   mongodb:
 
 networks:

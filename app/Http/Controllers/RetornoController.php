@@ -2,54 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Retorno;
-use App\Http\Resources\RetornoResource;
-use App\Http\Requests\RetornoRequest;
 use Illuminate\Http\Request;
+use \Xpendi\CnabBoleto\Cnab\Retorno\Factory as RetornoFactory;
 
 class RetornoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(Request $request)
     {
-        $retorno = Retorno::paginate(500);
-        return RetornoResource::collection($retorno);
-    }
+        // Validação dos dados do request
+        $request->validate([
+            'file' => 'required|file|mimes:txt|max:2048', // Adapte as extensões e o tamanho máximo conforme sua necessidade
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(RetornoRequest $request)
-    {
-        // cria o model retorno
-        $retorno = Retorno::create($request->all());
-        return new RetornoResource($retorno);
-    }
+        // Verifica se o arquivo foi enviado corretamente
+        if ($request->file('file')->isValid()) {
+            // Obtém o nome original do arquivo
+            $fileName = $request->file('file')->getClientOriginalName();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Retorno $retorno)
-    {
-        return new RetornoResource($retorno);
-    }
+            // Move o arquivo para o diretório desejado (por exemplo, 'uploads')
+            $request->file('file')->move(public_path('uploads'), $fileName);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(RetornoRequest $request, Retorno $retorno)
-    {
-        $retorno->update($request->all());
-        return new RetornoResource($retorno);
-    }
+            $retorno = RetornoFactory::make(public_path('uploads') . '/' . $fileName);
+            
+            $retorno->processar();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Retorno $retorno)
-    {
-        return Retorno::destroy($retorno->_id);
+            // Retorna uma resposta de sucesso
+            return response()->json([
+                'message' => 'Arquivo processado com sucesso!', 
+                'arquivo' => $fileName,
+                'banco' =>  $retorno->getBancoNome(),
+                'data' => $retorno->toArray(),
+            ]);
+        } else {
+            // Retorna uma resposta de erro caso o arquivo não tenha sido enviado corretamente
+            return response()->json(['message' => 'Falha ao enviar o arquivo.'], 400);
+        }
     }
 }

@@ -24,6 +24,38 @@ info:
     url: "https://github.com/trezzuri/api-laravel-boleto/blob/master/LICENSE"
 
 paths:
+  # API RETORNO
+  /api/retorno:
+    post:
+      operationId: retorno-upload
+      summary: POST /api/retorno
+      description: Realiza upload de um arquivo de retorno para processamento
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: 
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Arquivo processo com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Retorno200"
+        "400":
+          description: Erro ao processar a request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro400"
+
+      
+
   # API BOLETO
   /api/boleto:
     get:
@@ -640,6 +672,26 @@ components:
           $ref: "#/components/schemas/RemessaDados"
 
     # RESPONSES
+    RetornoResponseData:
+      description: Dados do arquivo processado
+      type: object
+      properties: 
+        message:
+          type: string
+          example: "Arquivo processado com sucesso!"
+          description: Mensagem do processamento
+        arquivo:
+          type: string
+          example: "banrisul.ret"
+          description: Nome do arquivo
+        banco:
+          type: string
+          example: "Banco do Estado do Rio Grande do Sul S.A."
+          description: ID do boleto
+        data:
+          type: object
+          example: {"header":{"operacaoCodigo":"2","operacao":"RETORNO","servicoCodigo":"00","servico":"00000000","agencia":"","agenciaDv":null,"conta":"11","contaDv":null,"data":"24\/11\/2016","convenio":null,"codigoCliente":null,"trash":[]},"trailer":{"valorTitulos":0,"avisos":0,"quantidadeTitulos":0,"quantidadeLiquidados":0,"quantidadeBaixados":0,"quantidadeEntradas":0,"quantidadeAlterados":0,"quantidadeErros":0,"trash":[]},"detalhes":[{"carteira":"0","nossoNumero":"1","numeroDocumento":"1","numeroControle":"1","codigoLiquidacao":null,"ocorrencia":"02","ocorrenciaTipo":3,"ocorrenciaDescricao":"Confirma\u00e7\u00e3o de entrada","dataOcorrencia":"24\/11\/2016","dataVencimento":"24\/11\/2016","dataCredito":null,"valor":"100.00","valorTarifa":0,"valorOutrasDespesas":0,"valorIOF":null,"valorAbatimento":null,"valorDesconto":0,"valorRecebido":"100.00","valorMora":0,"valorMulta":0,"error":null,"trash":[]}]}
+          description: Conteúdo do arquivo de retorno convertido para JSON
 
     BoletoResponseData:
       description: Dados do boleto gerado
@@ -709,6 +761,16 @@ components:
           description: Dados do boleto gerado
           items:
             $ref: "#/components/schemas/BoletoResponseData"
+            
+    Retorno200:
+      description: Estrutura da response retornada pelo endpoint retorno quando processamento OK
+      type: object
+      properties:
+        data:
+          type: array
+          description: Dados do retorno processado
+          items:
+            $ref: "#/components/schemas/RetornoResponseData"
 
     RemessaResponseData:
       description: Dados da remessa gerada
