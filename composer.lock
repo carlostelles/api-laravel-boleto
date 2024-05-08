@@ -6154,7 +6154,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/carlostelles/laravel-boleto.git",
-                "reference": "a9201390b7446ad6ba4c7a895ebd8295869121be"
+                "reference": "682d0b83d966329ae283e812263ee731bb2003c9"
             },
             "require": {
                 "ext-curl": "*",
@@ -6188,7 +6188,7 @@
             ],
             "description": "Biblioteca com boletos para o laravel",
             "homepage": "https://github.com/carlostelles/laravel-boleto",
-            "time": "2024-03-23T02:51:37+00:00"
+            "time": "2024-04-30T18:21:37+00:00"
         }
     ],
     "packages-dev": [
@@ -8496,9 +8496,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "xpendi/cnab-boleto": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

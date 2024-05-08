@@ -16,7 +16,7 @@ rm -rp /etc/nginx/ssl/*
 nginx -s stop
 
 # Execute o Certbot para obter e configurar o certificado SSL
-certbot certonly --standalone -d $COMMON_NAME --non-interactive --agree-tos --email $COMMON_EMAIL
+certbot certonly --standalone -d $COMMON_NAME --non-interactive --agree-tos --force-renewal --email $COMMON_EMAIL
 
 ln -s /etc/letsencrypt/live/$COMMON_NAME /etc/letsencrypt/live/default
 
