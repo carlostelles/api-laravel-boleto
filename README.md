@@ -131,21 +131,38 @@ Para saber sobre o funcionamento completo da API, [consulte a documentação](ht
 Mais detalhes sobre os bancos implementados e sobre os campos disponíveis para cada banco podem ser encontrados no package [laravel-boleto](https://github.com/Xpendi/laravel-boleto).
 
 
-## Customizando a imagem Docker
+## Executando Docker
 
-Caso você deseje customizar a imagem Docker:
-
-* Faça um fork e clone do projeto
-* Copie o .env.example para .env e ajuste as variáveis
-* Realize suas alterações
-* Modifique o nome da imagem no docker-compose.yaml, trocando a linha "image" por seu repo no Docker Hub
-* Execute:
+### 1
+Caso precise inicializar o container docker após alteracoes em configuracoes:
 
 ```
-docker compose build
-docker compose push
+$ docker compose build --no-cache
+$ docker compose up
 ```
 
+### 2
+Para gerar o certificado dentro do container:
+
+```
+$ docker exec -it api-cnab-boleto bash
+$ nginx -s quiet
+$ generate_certbot
+$ nginx
+```
+
+### 3
+Quando fizer o clone do projeto, para iniciar do zero o projeto, siga primero o passo 1 acima. Depois execute os comandos abaixo:
+
+```
+$ docker exec -it api-cnab-boleto bash
+$ composer install
+$ cp .env.example .env
+$ php artisan key:generate
+$ composer update
+```
+
+E por fim executar o passo três para gerar o certificado.
 
 ## Licença
 
