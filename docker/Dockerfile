@@ -18,8 +18,7 @@ RUN apk add --no-cache \
   supervisor \
   nginx \ 
   curl-dev \
-  openssl-dev \
-  php81-pecl-mongodb
+  openssl-dev
 
 # Copy nginx config file
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
@@ -43,7 +42,7 @@ RUN chmod +x /usr/local/bin/generate_certbot
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install zip sodium intl
 RUN docker-php-ext-enable zip sodium
-# RUN pecl install mongodb 
+RUN pecl install mongodb 
 RUN pecl config-set php_ini /usr/local/etc/php/php.ini
 
 # Install composer
@@ -70,4 +69,4 @@ USER root
 # Define supervisor as entrypoint
 ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
 
-EXPOSE 8080 443
+EXPOSE 80 443
