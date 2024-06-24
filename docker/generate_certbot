@@ -9,11 +9,9 @@ COMMON_EMAIL="contato@xpendi.com.br"
 # Crie o diretório se não existir
 mkdir -p /etc/nginx/ssl/
 
-rm -rp /etc/letsencrypt/archive/*
-rm -rp /etc/letsencrypt/live/*
-rm -rp /etc/nginx/ssl/*
-
-nginx -s stop
+rm -r /etc/letsencrypt/archive/*
+rm -r /etc/letsencrypt/live/*
+rm -r /etc/nginx/ssl/*
 
 # Execute o Certbot para obter e configurar o certificado SSL
 certbot certonly --standalone -d $COMMON_NAME --non-interactive --agree-tos --force-renewal --email $COMMON_EMAIL
@@ -25,5 +23,3 @@ cp /etc/letsencrypt/live/$COMMON_NAME/privkey.pem /etc/ssl/private/default.key
 
 cp /etc/letsencrypt/live/$COMMON_NAME/fullchain.pem /etc/nginx/ssl/cert.pem
 cp /etc/letsencrypt/live/$COMMON_NAME/privkey.pem /etc/nginx/ssl/key.pem
-
-nginx -s reload

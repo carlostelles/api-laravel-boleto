@@ -40,11 +40,11 @@ COPY docker/generate_certbot /usr/local/bin/
 RUN chmod +x /usr/local/bin/generate_certbot
 
 # Install and configure extensions
-RUN docker-php-ext-configure intl && \
-    docker-php-ext-install zip sodium intl && \
-    docker-php-ext-enable zip sodium && \
-    pecl install mongodb && \
-    pecl config-set php_ini /usr/local/etc/php/php.ini
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install zip sodium intl
+RUN docker-php-ext-enable zip sodium
+# RUN pecl install mongodb 
+RUN pecl config-set php_ini /usr/local/etc/php/php.ini
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
