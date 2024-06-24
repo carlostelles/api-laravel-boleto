@@ -8,14 +8,8 @@ services:
     image: xpendi/cnab-boleto
     container_name: api-cnab-boleto
     ports:
-      - mode: ingress
-        target: 8080
-        published: "${APP_PORT:-8080}"
-        protocol: tcp
-      - mode: ingress
-        target: 443
-        published: "${APP_PORT:-443}"
-        protocol: tcp
+      - 8080:8080
+      - 443:443
     volumes:
       - "./:/var/www/html"
     networks:
